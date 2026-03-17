@@ -1,17 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { IntroSplash } from "./IntroSplash";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
+// Dynamic import to avoid SSR issues with Three.js
+const FlintIntro = dynamic(
+  () => import("./FlintIntro").then((mod) => ({ default: mod.FlintIntro })),
+  { ssr: false }
+);
+
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const [introFinished, setIntroFinished] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
+  const [introFinished, setIntroFinished] = useState(false);
 
   useEffect(() => {
-    // 세션 중 한 번만 인트로 보여주기
     const seen = sessionStorage.getItem("intro-seen");
     if (seen) {
       setShowIntro(false);
@@ -19,23 +24,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (!showIntro) return;
-    const timer = setTimeout(() => {
-      setIntroFinished(true);
-      sessionStorage.setItem("intro-seen", "1");
-    }, 4200);
-    return () => clearTimeout(timer);
-  }, [showIntro]);
+  const handleIntroComplete = useCallback(() => {
+    setIntroFinished(true);
+    sessionStorage.setItem("intro-seen", "1");
+    // Remove intro after fade-out transition
+    setTimeout(() => setShowIntro(false), 900);
+  }, []);
 
   return (
     <>
-      {showIntro && <IntroSplash />}
+      {showIntro && <FlintIntro onComplete={handleIntroComplete} />}
 
       <motion.div
         initial={showIntro ? { opacity: 0 } : { opacity: 1 }}
         animate={introFinished ? { opacity: 1 } : {}}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.8 }}
       >
         <Header />
         <main className="min-h-screen">{children}</main>
