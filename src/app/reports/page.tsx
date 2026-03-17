@@ -94,7 +94,7 @@ export default function ReportsPage() {
           placeholder="종목명, 종목코드, 키워드로 검색"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="h-12 rounded-xl border-[#E5E7EB] pl-12 text-sm focus:border-[#0D2137] focus:ring-[#0D2137]"
+          className="h-12 rounded-xl border-[#E5E7EB] pl-12 text-sm focus:border-[#EA580C] focus:ring-[#EA580C]"
         />
       </div>
 
@@ -108,8 +108,8 @@ export default function ReportsPage() {
               onClick={() => setSelectedMarket(m.value)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                 selectedMarket === m.value
-                  ? "bg-[#0D2137] text-white"
-                  : "bg-[#F7F8FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                  ? "bg-[#1C1917] text-white"
+                  : "bg-[#FAFAF9] text-[#6B7280] hover:bg-[#E5E7EB]"
               }`}
             >
               {m.label}
@@ -125,8 +125,8 @@ export default function ReportsPage() {
               onClick={() => setSelectedType(t.value)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                 selectedType === t.value
-                  ? "bg-[#0D2137] text-white"
-                  : "bg-[#F7F8FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                  ? "bg-[#1C1917] text-white"
+                  : "bg-[#FAFAF9] text-[#6B7280] hover:bg-[#E5E7EB]"
               }`}
             >
               {t.label}
@@ -142,7 +142,7 @@ export default function ReportsPage() {
               onClick={() => setSort(s.value)}
               className={`text-sm font-medium transition-colors ${
                 sort === s.value
-                  ? "text-[#0D2137] underline underline-offset-4"
+                  ? "text-[#EA580C] underline underline-offset-4"
                   : "text-[#6B7280] hover:text-[#1A1A1A]"
               }`}
             >
@@ -154,7 +154,7 @@ export default function ReportsPage() {
 
       {/* Results count */}
       <div className="mb-4">
-        <Badge variant="secondary" className="rounded-full bg-[#F7F8FA] text-xs text-[#6B7280]">
+        <Badge variant="secondary" className="rounded-full bg-[#FAFAF9] text-xs text-[#6B7280]">
           {filteredReports.length}개 리포트
         </Badge>
       </div>

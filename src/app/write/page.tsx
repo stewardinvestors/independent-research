@@ -23,7 +23,7 @@ const reportTypes: { label: string; value: ReportType }[] = [
 ];
 
 const opinions: { label: string; value: Opinion; color: string }[] = [
-  { label: "매수", value: "BUY", color: "bg-[#2E8B57] text-white" },
+  { label: "매수", value: "BUY", color: "bg-[#EA580C] text-white" },
   { label: "중립", value: "HOLD", color: "bg-[#F59E0B] text-white" },
   { label: "매도", value: "SELL", color: "bg-[#C94040] text-white" },
   { label: "의견 없음", value: "NONE", color: "bg-[#6B7280] text-white" },
@@ -88,7 +88,7 @@ export default function WritePage() {
               onClick={() => setStep(s)}
               className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
                 step >= s
-                  ? "bg-[#0D2137] text-white"
+                  ? "bg-[#1C1917] text-white"
                   : "bg-[#E5E7EB] text-[#6B7280]"
               }`}
             >
@@ -128,7 +128,7 @@ export default function WritePage() {
                     setSelectedStock(stock);
                     setStockSearch(stock.name);
                   }}
-                  className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-[#F7F8FA]"
+                  className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-[#FAFAF9]"
                 >
                   <div>
                     <span className="font-medium text-[#1A1A1A]">
@@ -140,7 +140,7 @@ export default function WritePage() {
                   </div>
                   <Badge
                     variant="secondary"
-                    className="rounded-full bg-[#4A6D8C]/10 text-xs"
+                    className="rounded-full bg-[#78716C]/10 text-xs"
                   >
                     {stock.market}
                   </Badge>
@@ -150,9 +150,9 @@ export default function WritePage() {
           )}
 
           {selectedStock && (
-            <div className="mt-6 rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-5">
+            <div className="mt-6 rounded-2xl border border-[#E5E7EB] bg-[#FAFAF9] p-5">
               <p className="text-sm text-[#6B7280]">선택된 종목</p>
-              <p className="mt-1 text-lg font-bold text-[#0D2137]">
+              <p className="mt-1 text-lg font-bold text-[#1C1917]">
                 {selectedStock.name}{" "}
                 <span className="text-sm font-normal text-[#6B7280]">
                   {selectedStock.code}
@@ -173,7 +173,7 @@ export default function WritePage() {
             <Button
               onClick={() => setStep(2)}
               disabled={!selectedStock}
-              className="h-12 rounded-xl bg-[#0D2137] px-8 hover:bg-[#1B3A5C]"
+              className="h-12 rounded-xl bg-[#1C1917] px-8 hover:bg-[#292524]"
             >
               다음
               <ChevronRight className="ml-1 h-4 w-4" />
@@ -208,8 +208,8 @@ export default function WritePage() {
                   onClick={() => setType(t.value)}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     type === t.value
-                      ? "bg-[#0D2137] text-white"
-                      : "bg-[#F7F8FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                      ? "bg-[#1C1917] text-white"
+                      : "bg-[#FAFAF9] text-[#6B7280] hover:bg-[#E5E7EB]"
                   }`}
                 >
                   {t.label}
@@ -230,7 +230,7 @@ export default function WritePage() {
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     opinion === o.value
                       ? o.color
-                      : "bg-[#F7F8FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                      : "bg-[#FAFAF9] text-[#6B7280] hover:bg-[#E5E7EB]"
                   }`}
                 >
                   {o.label}
@@ -280,7 +280,7 @@ export default function WritePage() {
             {keyPoints.length < 5 && (
               <button
                 onClick={addKeyPoint}
-                className="mt-2 flex items-center gap-1 text-sm text-[#4A6D8C] hover:text-[#0D2137]"
+                className="mt-2 flex items-center gap-1 text-sm text-[#78716C] hover:text-[#1C1917]"
               >
                 <Plus className="h-4 w-4" /> 포인트 추가
               </button>
@@ -314,7 +314,7 @@ export default function WritePage() {
                   <Badge
                     key={tag}
                     variant="secondary"
-                    className="flex items-center gap-1 rounded-full bg-[#0D2137]/5"
+                    className="flex items-center gap-1 rounded-full bg-[#1C1917]/5"
                   >
                     {tag}
                     <button
@@ -339,7 +339,7 @@ export default function WritePage() {
             <Button
               onClick={() => setStep(3)}
               disabled={!title}
-              className="h-12 rounded-xl bg-[#0D2137] px-8 hover:bg-[#1B3A5C]"
+              className="h-12 rounded-xl bg-[#1C1917] px-8 hover:bg-[#292524]"
             >
               다음
               <ChevronRight className="ml-1 h-4 w-4" />
@@ -359,7 +359,7 @@ export default function WritePage() {
               placeholder="리포트 본문을 작성하세요..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="h-96 w-full rounded-xl border border-[#E5E7EB] p-4 text-sm leading-relaxed focus:border-[#0D2137] focus:outline-none focus:ring-1 focus:ring-[#0D2137]"
+              className="h-96 w-full rounded-xl border border-[#E5E7EB] p-4 text-sm leading-relaxed focus:border-[#EA580C] focus:outline-none focus:ring-1 focus:ring-[#EA580C]"
             />
             <p className="mt-1 text-xs text-[#6B7280]">
               * 추후 Tiptap 리치 에디터가 적용될 예정입니다
@@ -371,7 +371,7 @@ export default function WritePage() {
             <label className="mb-2 block text-sm font-medium text-[#1A1A1A]">
               또는 PDF 업로드
             </label>
-            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-[#E5E7EB] p-8 transition-colors hover:border-[#4A6D8C]">
+            <div className="flex items-center justify-center rounded-xl border-2 border-dashed border-[#E5E7EB] p-8 transition-colors hover:border-[#78716C]">
               <div className="text-center">
                 <FileUp className="mx-auto h-10 w-10 text-[#6B7280]" />
                 <p className="mt-2 text-sm text-[#6B7280]">
@@ -397,7 +397,7 @@ export default function WritePage() {
               >
                 임시저장
               </Button>
-              <Button className="h-12 rounded-xl bg-[#2E8B57] px-8 hover:bg-[#247048]">
+              <Button className="h-12 rounded-xl bg-[#EA580C] px-8 hover:bg-[#C2410C]">
                 발행하기
               </Button>
             </div>

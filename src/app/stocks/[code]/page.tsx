@@ -24,7 +24,7 @@ export default function StockPage({
         </h1>
         <Link
           href="/reports"
-          className="mt-4 text-sm text-[#0D2137] hover:underline"
+          className="mt-4 text-sm text-[#1C1917] hover:underline"
         >
           리포트 목록으로 돌아가기
         </Link>
@@ -41,7 +41,7 @@ export default function StockPage({
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <Link
         href="/reports"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0D2137]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#1C1917]"
       >
         <ArrowLeft className="h-4 w-4" />
         뒤로
@@ -56,7 +56,7 @@ export default function StockPage({
           <span className="text-lg text-[#6B7280]">{stock.code}</span>
           <Badge
             variant="secondary"
-            className="rounded-full bg-[#4A6D8C]/10 text-sm text-[#4A6D8C]"
+            className="rounded-full bg-[#78716C]/10 text-sm text-[#78716C]"
           >
             {stock.market}
           </Badge>
@@ -92,7 +92,7 @@ export default function StockPage({
             <div className="flex h-6 overflow-hidden rounded-full">
               {buyCount > 0 && (
                 <div
-                  className="flex items-center justify-center bg-[#2E8B57] text-xs font-medium text-white"
+                  className="flex items-center justify-center bg-[#EA580C] text-xs font-medium text-white"
                   style={{ width: `${(buyCount / total) * 100}%` }}
                 >
                   매수 {buyCount}

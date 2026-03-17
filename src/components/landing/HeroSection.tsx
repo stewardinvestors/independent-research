@@ -6,7 +6,7 @@ import { ArrowRight, Users } from "lucide-react";
 
 export function HeroSection() {
   return (
-    <section className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-gradient-to-br from-[#0D2137] via-[#122B47] to-[#1B3A5C]">
+    <section className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-gradient-to-br from-[#1C1917] via-[#292524] to-[#1C1917]">
       {/* Grid pattern */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
@@ -22,9 +22,9 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-4 text-sm font-medium tracking-wide text-[#4A6D8C]"
+          className="mb-4 text-sm font-medium tracking-wide text-[#78716C]"
         >
-          독립 기업분석 리포트 플랫폼
+          Independent Research Platform
         </motion.p>
 
         <motion.h1
@@ -42,7 +42,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.25 }}
-          className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#8BA4BE] sm:text-lg"
+          className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-[#A8A29E] sm:text-lg"
         >
           우리는 증권사가 다루지 않는 2,292개 기업의 이야기를 씁니다
         </motion.p>
@@ -55,7 +55,7 @@ export function HeroSection() {
         >
           <Link
             href="/reports"
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-8 text-sm font-semibold text-[#0D2137] shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] sm:w-auto"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-8 text-sm font-semibold text-[#1C1917] shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98] sm:w-auto"
           >
             리포트 둘러보기
             <ArrowRight className="h-4 w-4" />

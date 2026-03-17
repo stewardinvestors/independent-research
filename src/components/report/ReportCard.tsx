@@ -27,7 +27,7 @@ export function ReportCard({ report }: ReportCardProps) {
           {report.stock && (
             <Badge
               variant="secondary"
-              className="rounded-full bg-[#0D2137]/5 text-xs text-[#0D2137]"
+              className="rounded-full bg-[#1C1917]/5 text-xs text-[#1C1917]"
             >
               {report.stock.sector}
             </Badge>
@@ -35,7 +35,7 @@ export function ReportCard({ report }: ReportCardProps) {
           {report.stock && (
             <Badge
               variant="secondary"
-              className="rounded-full bg-[#4A6D8C]/10 text-xs text-[#4A6D8C]"
+              className="rounded-full bg-[#78716C]/10 text-xs text-[#78716C]"
             >
               {report.stock.market}
             </Badge>
@@ -44,7 +44,7 @@ export function ReportCard({ report }: ReportCardProps) {
 
         {/* Stock info */}
         <div className="mt-4">
-          <h3 className="text-lg font-bold text-[#1A1A1A] group-hover:text-[#0D2137]">
+          <h3 className="text-lg font-bold text-[#1A1A1A] group-hover:text-[#EA580C]">
             {report.stock?.name ?? "산업분석"}
           </h3>
           {report.stock && (
@@ -55,7 +55,7 @@ export function ReportCard({ report }: ReportCardProps) {
         </div>
 
         {/* Report title */}
-        <p className="mt-3 line-clamp-2 flex-1 text-sm leading-relaxed text-[#4A6D8C]">
+        <p className="mt-3 line-clamp-2 flex-1 text-sm leading-relaxed text-[#78716C]">
           {report.title}
         </p>
 
@@ -65,7 +65,7 @@ export function ReportCard({ report }: ReportCardProps) {
             <span
               className={`text-xs font-semibold ${
                 report.opinion === "BUY"
-                  ? "text-[#2E8B57]"
+                  ? "text-[#EA580C]"
                   : report.opinion === "SELL"
                   ? "text-[#C94040]"
                   : "text-[#6B7280]"
@@ -77,7 +77,7 @@ export function ReportCard({ report }: ReportCardProps) {
               {formatNumber(report.targetPrice)}원
             </span>
             {upside > 0 ? (
-              <span className="flex items-center gap-0.5 text-xs font-medium text-[#2E8B57]">
+              <span className="flex items-center gap-0.5 text-xs font-medium text-[#EA580C]">
                 <TrendingUp className="h-3 w-3" />+{upside.toFixed(0)}%
               </span>
             ) : upside < 0 ? (

@@ -19,7 +19,7 @@ const statsCards = [
     value: "156",
     change: "+12",
     icon: FileText,
-    color: "#0D2137",
+    color: "#1C1917",
   },
   {
     label: "검토 대기",
@@ -33,14 +33,14 @@ const statsCards = [
     value: "24",
     change: "+2",
     icon: Users,
-    color: "#2E8B57",
+    color: "#EA580C",
   },
   {
     label: "이번 달 조회수",
     value: "45,200",
     change: "+15%",
     icon: TrendingUp,
-    color: "#4A6D8C",
+    color: "#78716C",
   },
 ];
 
@@ -66,7 +66,7 @@ export default function AdminPage() {
               {stat.change && (
                 <Badge
                   variant="secondary"
-                  className="rounded-full bg-[#2E8B57]/10 text-xs text-[#2E8B57]"
+                  className="rounded-full bg-[#EA580C]/10 text-xs text-[#EA580C]"
                 >
                   {stat.change}
                 </Badge>
@@ -101,7 +101,7 @@ export default function AdminPage() {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="rounded-lg bg-[#2E8B57] hover:bg-[#247048]"
+                  className="rounded-lg bg-[#EA580C] hover:bg-[#C2410C]"
                 >
                   <CheckCircle className="mr-1 h-4 w-4" />
                   승인
@@ -131,7 +131,7 @@ export default function AdminPage() {
               key={analyst.id}
               className="flex items-center gap-4 rounded-xl border border-[#E5E7EB] bg-white p-4"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0D2137] font-bold text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1C1917] font-bold text-white">
                 {analyst.name[0]}
               </div>
               <div className="flex-1">
@@ -143,7 +143,7 @@ export default function AdminPage() {
               </div>
               <Badge
                 variant="secondary"
-                className="rounded-full bg-[#2E8B57]/10 text-xs text-[#2E8B57]"
+                className="rounded-full bg-[#EA580C]/10 text-xs text-[#EA580C]"
               >
                 활동중
               </Badge>

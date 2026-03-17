@@ -31,7 +31,7 @@ export function LatestReportsSection() {
           </div>
           <Link
             href="/reports"
-            className="hidden items-center gap-1 text-sm font-medium text-[#0D2137] hover:underline sm:flex"
+            className="hidden items-center gap-1 text-sm font-medium text-[#1C1917] hover:underline sm:flex"
           >
             전체 보기
             <ArrowRight className="h-4 w-4" />
@@ -57,7 +57,7 @@ export function LatestReportsSection() {
 
         <Link
           href="/reports"
-          className="mt-8 flex items-center justify-center gap-1 text-sm font-medium text-[#0D2137] hover:underline sm:hidden"
+          className="mt-8 flex items-center justify-center gap-1 text-sm font-medium text-[#1C1917] hover:underline sm:hidden"
         >
           전체 보기
           <ArrowRight className="h-4 w-4" />

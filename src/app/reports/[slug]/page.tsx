@@ -36,7 +36,7 @@ export default function ReportDetailPage({
         </h1>
         <Link
           href="/reports"
-          className="mt-4 text-sm text-[#0D2137] hover:underline"
+          className="mt-4 text-sm text-[#1C1917] hover:underline"
         >
           리포트 목록으로 돌아가기
         </Link>
@@ -60,7 +60,7 @@ export default function ReportDetailPage({
       {/* Back link */}
       <Link
         href="/reports"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0D2137]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#1C1917]"
       >
         <ArrowLeft className="h-4 w-4" />
         리포트 목록
@@ -73,14 +73,14 @@ export default function ReportDetailPage({
           <div className="mb-4 flex items-center gap-2">
             <Link
               href={`/stocks/${report.stock.code}`}
-              className="text-lg font-bold text-[#0D2137] hover:underline"
+              className="text-lg font-bold text-[#1C1917] hover:underline"
             >
               {report.stock.name}
             </Link>
             <span className="text-sm text-[#6B7280]">{report.stock.code}</span>
             <Badge
               variant="secondary"
-              className="rounded-full bg-[#4A6D8C]/10 text-xs text-[#4A6D8C]"
+              className="rounded-full bg-[#78716C]/10 text-xs text-[#78716C]"
             >
               {report.stock.market}
             </Badge>
@@ -99,7 +99,7 @@ export default function ReportDetailPage({
           </span>
           <Link
             href={`/analysts/${report.author.id}`}
-            className="font-medium text-[#0D2137] hover:underline"
+            className="font-medium text-[#1C1917] hover:underline"
           >
             {report.author.name}
           </Link>
@@ -120,7 +120,7 @@ export default function ReportDetailPage({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
           >
             <Download className="mr-1.5 h-4 w-4" />
             PDF
@@ -128,7 +128,7 @@ export default function ReportDetailPage({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
           >
             <Bookmark className="mr-1.5 h-4 w-4" />
             북마크
@@ -136,7 +136,7 @@ export default function ReportDetailPage({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
           >
             <Share2 className="mr-1.5 h-4 w-4" />
             공유
@@ -146,14 +146,14 @@ export default function ReportDetailPage({
 
       {/* Investment summary card */}
       {report.opinion && (
-        <div className="mb-10 rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-6">
+        <div className="mb-10 rounded-2xl border border-[#E5E7EB] bg-[#FAFAF9] p-6">
           <div className="grid gap-4 sm:grid-cols-3">
             <div>
               <p className="text-xs text-[#6B7280]">투자의견</p>
               <p
                 className={`mt-1 text-lg font-bold ${
                   report.opinion === "BUY"
-                    ? "text-[#2E8B57]"
+                    ? "text-[#EA580C]"
                     : report.opinion === "SELL"
                     ? "text-[#C94040]"
                     : "text-[#6B7280]"
@@ -196,8 +196,8 @@ export default function ReportDetailPage({
                 </p>
                 <ul className="space-y-2">
                   {report.keyPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-[#4A6D8C]">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2E8B57]" />
+                    <li key={i} className="flex items-start gap-2 text-sm text-[#78716C]">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#EA580C]" />
                       {point}
                     </li>
                   ))}
@@ -211,7 +211,7 @@ export default function ReportDetailPage({
       {/* Report body (mock content) */}
       <article className="prose prose-lg mx-auto max-w-none">
         <h2 className="text-xl font-bold text-[#1A1A1A]">1. 기업 개요</h2>
-        <p className="leading-relaxed text-[#4A6D8C]">
+        <p className="leading-relaxed text-[#78716C]">
           {report.stock?.name}({report.stock?.code})은 {report.stock?.sector}{" "}
           섹터에 속한 {report.stock?.market} 상장 기업으로, 독자적인 기술력과
           파이프라인을 기반으로 성장하고 있습니다. 현재 시가총액 기준으로
@@ -222,7 +222,7 @@ export default function ReportDetailPage({
         <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
           2. 투자 포인트
         </h2>
-        <p className="leading-relaxed text-[#4A6D8C]">
+        <p className="leading-relaxed text-[#78716C]">
           핵심 투자 포인트는 다음과 같습니다. 첫째, 기존 사업부의 안정적인
           성장세가 지속되고 있습니다. 둘째, 신규 사업 영역으로의 확장을 통해
           중장기 성장 동력을 확보하고 있습니다. 셋째, 경영진의 주주 친화적
@@ -235,7 +235,7 @@ export default function ReportDetailPage({
         </h2>
         <div className="mt-4 overflow-x-auto rounded-xl border border-[#E5E7EB]">
           <table className="w-full text-sm">
-            <thead className="bg-[#F7F8FA]">
+            <thead className="bg-[#FAFAF9]">
               <tr>
                 <th className="px-4 py-3 text-left font-semibold text-[#1A1A1A]">
                   항목
@@ -253,38 +253,38 @@ export default function ReportDetailPage({
             </thead>
             <tbody className="divide-y divide-[#E5E7EB]">
               <tr>
-                <td className="px-4 py-3 text-[#4A6D8C]">매출액 (억원)</td>
+                <td className="px-4 py-3 text-[#78716C]">매출액 (억원)</td>
                 <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
                   1,234
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
                   1,567
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                <td className="px-4 py-3 text-right font-mono text-[#EA580C]">
                   2,103
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-[#4A6D8C]">영업이익 (억원)</td>
+                <td className="px-4 py-3 text-[#78716C]">영업이익 (억원)</td>
                 <td className="px-4 py-3 text-right font-mono text-[#C94040]">
                   -89
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
                   45
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                <td className="px-4 py-3 text-right font-mono text-[#EA580C]">
                   312
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-3 text-[#4A6D8C]">순이익 (억원)</td>
+                <td className="px-4 py-3 text-[#78716C]">순이익 (억원)</td>
                 <td className="px-4 py-3 text-right font-mono text-[#C94040]">
                   -156
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
                   12
                 </td>
-                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                <td className="px-4 py-3 text-right font-mono text-[#EA580C]">
                   245
                 </td>
               </tr>
@@ -295,7 +295,7 @@ export default function ReportDetailPage({
         <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
           4. 리스크 요인
         </h2>
-        <p className="leading-relaxed text-[#4A6D8C]">
+        <p className="leading-relaxed text-[#78716C]">
           주요 리스크 요인으로는 파이프라인 개발 지연 가능성, 경쟁 심화에
           따른 마진 압박, 그리고 거시경제 불확실성이 있습니다. 다만, 이러한
           리스크는 현재 주가에 상당 부분 반영되어 있다고 판단합니다.
@@ -304,7 +304,7 @@ export default function ReportDetailPage({
         <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
           5. 밸류에이션 및 결론
         </h2>
-        <p className="leading-relaxed text-[#4A6D8C]">
+        <p className="leading-relaxed text-[#78716C]">
           목표가 {report.targetPrice ? formatNumber(report.targetPrice) : "-"}
           원은 2026년 추정 실적 기준 PER 배수를 적용하여 산출하였습니다.
           현재가 대비 충분한 상승 여력이 있다고 판단하며,{" "}
@@ -321,9 +321,9 @@ export default function ReportDetailPage({
       </div>
 
       {/* Author card */}
-      <div className="mt-10 rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-6">
+      <div className="mt-10 rounded-2xl border border-[#E5E7EB] bg-[#FAFAF9] p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0D2137] text-lg font-bold text-white">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1C1917] text-lg font-bold text-white">
             {report.author.name[0]}
           </div>
           <div>

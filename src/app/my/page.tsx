@@ -16,7 +16,7 @@ export default function MyPage() {
       <div className="mb-10 rounded-2xl border border-[#E5E7EB] bg-white p-6 sm:p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0D2137] text-xl font-bold text-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1C1917] text-xl font-bold text-white">
               G
             </div>
             <div>
@@ -36,30 +36,30 @@ export default function MyPage() {
           </Button>
         </div>
 
-        <div className="mt-6 grid grid-cols-4 gap-4 rounded-xl bg-[#F7F8FA] p-4">
+        <div className="mt-6 grid grid-cols-4 gap-4 rounded-xl bg-[#FAFAF9] p-4">
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <Bookmark className="h-3 w-3" /> 북마크
             </p>
-            <p className="mt-1 text-lg font-bold text-[#0D2137]">3</p>
+            <p className="mt-1 text-lg font-bold text-[#1C1917]">3</p>
           </div>
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <Eye className="h-3 w-3" /> 최근 본
             </p>
-            <p className="mt-1 text-lg font-bold text-[#0D2137]">12</p>
+            <p className="mt-1 text-lg font-bold text-[#1C1917]">12</p>
           </div>
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <UserCheck className="h-3 w-3" /> 팔로우
             </p>
-            <p className="mt-1 text-lg font-bold text-[#0D2137]">2</p>
+            <p className="mt-1 text-lg font-bold text-[#1C1917]">2</p>
           </div>
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <Heart className="h-3 w-3" /> 좋아요
             </p>
-            <p className="mt-1 text-lg font-bold text-[#0D2137]">8</p>
+            <p className="mt-1 text-lg font-bold text-[#1C1917]">8</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function MyPage() {
       {/* Bookmarks */}
       <section className="mb-10">
         <div className="mb-4 flex items-center gap-2">
-          <Bookmark className="h-5 w-5 text-[#0D2137]" />
+          <Bookmark className="h-5 w-5 text-[#EA580C]" />
           <h2 className="text-lg font-bold text-[#1A1A1A]">북마크한 리포트</h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -80,7 +80,7 @@ export default function MyPage() {
       {/* Recent */}
       <section>
         <div className="mb-4 flex items-center gap-2">
-          <Eye className="h-5 w-5 text-[#0D2137]" />
+          <Eye className="h-5 w-5 text-[#EA580C]" />
           <h2 className="text-lg font-bold text-[#1A1A1A]">최근 본 리포트</h2>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

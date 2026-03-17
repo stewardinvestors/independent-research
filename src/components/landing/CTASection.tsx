@@ -12,7 +12,7 @@ export function CTASection() {
   return (
     <section
       ref={ref}
-      className="bg-gradient-to-br from-[#0D2137] to-[#1B3A5C] py-24 sm:py-32"
+      className="bg-gradient-to-br from-[#1C1917] to-[#292524] py-24 sm:py-32"
     >
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <motion.h2
@@ -30,7 +30,7 @@ export function CTASection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="mt-4 text-[#8BA4BE]"
+          className="mt-4 text-[#A8A29E]"
         >
           지금 바로 증권사가 다루지 않는 기업 이야기를 만나보세요
         </motion.p>
@@ -43,7 +43,7 @@ export function CTASection() {
         >
           <Link
             href="/reports"
-            className="inline-flex h-12 items-center gap-2 rounded-xl bg-white px-8 text-sm font-semibold text-[#0D2137] shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-white px-8 text-sm font-semibold text-[#1C1917] shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
           >
             무료로 시작하기
             <ArrowRight className="h-4 w-4" />

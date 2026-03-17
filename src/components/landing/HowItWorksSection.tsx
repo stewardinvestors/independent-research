@@ -27,7 +27,7 @@ export function HowItWorksSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="bg-[#F7F8FA] py-24 sm:py-32">
+    <section ref={ref} className="bg-[#FAFAF9] py-24 sm:py-32">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export function HowItWorksSection() {
               className="relative flex flex-col items-center text-center"
             >
               <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-[#E5E7EB]">
-                <step.icon className="h-10 w-10 text-[#0D2137]" />
+                <step.icon className="h-10 w-10 text-[#EA580C]" />
               </div>
               <h3 className="mt-6 text-lg font-semibold text-[#1A1A1A]">
                 {step.title}

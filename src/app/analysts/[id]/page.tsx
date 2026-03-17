@@ -25,7 +25,7 @@ export default function AnalystPage({
         </h1>
         <Link
           href="/reports"
-          className="mt-4 text-sm text-[#0D2137] hover:underline"
+          className="mt-4 text-sm text-[#1C1917] hover:underline"
         >
           리포트 목록으로 돌아가기
         </Link>
@@ -37,7 +37,7 @@ export default function AnalystPage({
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <Link
         href="/reports"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0D2137]"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#1C1917]"
       >
         <ArrowLeft className="h-4 w-4" />
         뒤로
@@ -46,7 +46,7 @@ export default function AnalystPage({
       {/* Profile card */}
       <div className="mb-10 rounded-2xl border border-[#E5E7EB] bg-white p-6 sm:p-8">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#0D2137] text-2xl font-bold text-white">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#1C1917] text-2xl font-bold text-white">
             {analyst.name[0]}
           </div>
           <div className="flex-1 text-center sm:text-left">
@@ -61,25 +61,25 @@ export default function AnalystPage({
                 <Badge
                   key={sector}
                   variant="secondary"
-                  className="rounded-full bg-[#0D2137]/5 text-xs text-[#0D2137]"
+                  className="rounded-full bg-[#1C1917]/5 text-xs text-[#1C1917]"
                 >
                   {sector}
                 </Badge>
               ))}
             </div>
           </div>
-          <Button className="rounded-xl bg-[#0D2137] hover:bg-[#1B3A5C]">
+          <Button className="rounded-xl bg-[#EA580C] hover:bg-[#C2410C]">
             <UserPlus className="mr-1.5 h-4 w-4" />
             팔로우
           </Button>
         </div>
 
-        <div className="mt-6 grid grid-cols-3 gap-4 rounded-xl bg-[#F7F8FA] p-4">
+        <div className="mt-6 grid grid-cols-3 gap-4 rounded-xl bg-[#FAFAF9] p-4">
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <FileText className="h-3 w-3" /> 리포트
             </p>
-            <p className="mt-1 text-xl font-bold text-[#0D2137]">
+            <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {analyst.reportCount}
             </p>
           </div>
@@ -87,13 +87,13 @@ export default function AnalystPage({
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <Eye className="h-3 w-3" /> 총 조회수
             </p>
-            <p className="mt-1 text-xl font-bold text-[#0D2137]">
+            <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {formatNumber(analyst.totalViews)}
             </p>
           </div>
           <div className="text-center">
             <p className="text-xs text-[#6B7280]">평균 조회수</p>
-            <p className="mt-1 text-xl font-bold text-[#0D2137]">
+            <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {analyst.reportCount > 0
                 ? formatNumber(
                     Math.round(analyst.totalViews / analyst.reportCount)

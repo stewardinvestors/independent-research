@@ -10,12 +10,12 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
 
-  --color-navy: #0D2137;
-  --color-navy-light: #1B3A5C;
-  --color-blue-gray: #4A6D8C;
-  --color-signal-green: #2E8B57;
+  --color-stone: #1C1917;
+  --color-stone-light: #292524;
+  --color-warm-gray: #78716C;
+  --color-ember: #EA580C;
   --color-signal-red: #C94040;
-  --color-surface: #F7F8FA;
+  --color-surface: #FAFAF9;
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

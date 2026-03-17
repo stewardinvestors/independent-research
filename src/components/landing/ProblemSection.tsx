@@ -59,7 +59,7 @@ export function ProblemSection() {
                   cy="100"
                   r="80"
                   fill="none"
-                  stroke="#0D2137"
+                  stroke="#EA580C"
                   strokeWidth="24"
                   strokeDasharray={`${80 * 2 * Math.PI * 0.143} ${80 * 2 * Math.PI}`}
                   strokeLinecap="round"
@@ -69,7 +69,7 @@ export function ProblemSection() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl font-bold text-[#0D2137]">
+                <span className="text-4xl font-bold text-[#1C1917]">
                   14.3%
                 </span>
                 <span className="mt-1 text-sm text-[#6B7280]">실질 커버리지</span>
@@ -90,19 +90,19 @@ export function ProblemSection() {
             </h2>
 
             <div className="mt-8 space-y-6">
-              <div className="rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-5">
+              <div className="rounded-2xl border border-[#E5E7EB] bg-[#FAFAF9] p-5">
                 <p className="text-sm text-[#6B7280]">전체 상장사</p>
-                <p className="mt-1 text-3xl font-bold text-[#0D2137]">
+                <p className="mt-1 text-3xl font-bold text-[#1C1917]">
                   <CountUp end={2674} />개
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5">
                   <p className="text-sm text-[#6B7280]">실질 커버</p>
-                  <p className="mt-1 text-2xl font-bold text-[#0D2137]">
+                  <p className="mt-1 text-2xl font-bold text-[#1C1917]">
                     <CountUp end={382} />개
                   </p>
-                  <p className="text-xs text-[#4A6D8C]">14.3%</p>
+                  <p className="text-xs text-[#78716C]">14.3%</p>
                 </div>
                 <div className="rounded-2xl border border-[#C94040]/20 bg-[#C94040]/5 p-5">
                   <p className="text-sm text-[#6B7280]">정보 사각지대</p>
