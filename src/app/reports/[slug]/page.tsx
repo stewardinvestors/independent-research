@@ -1,0 +1,379 @@
+"use client";
+
+import { use } from "react";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Bookmark,
+  Share2,
+  Download,
+  Eye,
+  Clock,
+  Heart,
+  CheckCircle2,
+  Star,
+  Calendar,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { mockReports, opinionLabels, formatNumber, reportTypeLabels } from "@/data/mock";
+import { ReportCard } from "@/components/report/ReportCard";
+
+export default function ReportDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = use(params);
+  const report = mockReports.find((r) => r.slug === slug);
+
+  if (!report) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold text-[#1A1A1A]">
+          리포트를 찾을 수 없습니다
+        </h1>
+        <Link
+          href="/reports"
+          className="mt-4 text-sm text-[#0D2137] hover:underline"
+        >
+          리포트 목록으로 돌아가기
+        </Link>
+      </div>
+    );
+  }
+
+  const relatedReports = mockReports
+    .filter(
+      (r) =>
+        r.id !== report.id &&
+        (r.stock?.sector === report.stock?.sector ||
+          r.stockId === report.stockId)
+    )
+    .slice(0, 3);
+
+  const riskLevel = report.opinion === "BUY" ? 3 : report.opinion === "HOLD" ? 2 : 4;
+
+  return (
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+      {/* Back link */}
+      <Link
+        href="/reports"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0D2137]"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        리포트 목록
+      </Link>
+
+      {/* Header */}
+      <header className="mb-8">
+        {/* Stock info */}
+        {report.stock && (
+          <div className="mb-4 flex items-center gap-2">
+            <Link
+              href={`/stocks/${report.stock.code}`}
+              className="text-lg font-bold text-[#0D2137] hover:underline"
+            >
+              {report.stock.name}
+            </Link>
+            <span className="text-sm text-[#6B7280]">{report.stock.code}</span>
+            <Badge
+              variant="secondary"
+              className="rounded-full bg-[#4A6D8C]/10 text-xs text-[#4A6D8C]"
+            >
+              {report.stock.market}
+            </Badge>
+          </div>
+        )}
+
+        <h1 className="text-2xl font-bold leading-tight text-[#1A1A1A] sm:text-3xl">
+          {report.title}
+        </h1>
+
+        {/* Meta info */}
+        <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-[#6B7280]">
+          <span className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            {report.publishedAt}
+          </span>
+          <Link
+            href={`/analysts/${report.author.id}`}
+            className="font-medium text-[#0D2137] hover:underline"
+          >
+            {report.author.name}
+          </Link>
+          <span className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            {formatNumber(report.viewCount)}
+          </span>
+          {report.readTime && (
+            <span className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              {report.readTime}분
+            </span>
+          )}
+        </div>
+
+        {/* Action buttons */}
+        <div className="mt-4 flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+          >
+            <Download className="mr-1.5 h-4 w-4" />
+            PDF
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+          >
+            <Bookmark className="mr-1.5 h-4 w-4" />
+            북마크
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#0D2137]"
+          >
+            <Share2 className="mr-1.5 h-4 w-4" />
+            공유
+          </Button>
+        </div>
+      </header>
+
+      {/* Investment summary card */}
+      {report.opinion && (
+        <div className="mb-10 rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-6">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <p className="text-xs text-[#6B7280]">투자의견</p>
+              <p
+                className={`mt-1 text-lg font-bold ${
+                  report.opinion === "BUY"
+                    ? "text-[#2E8B57]"
+                    : report.opinion === "SELL"
+                    ? "text-[#C94040]"
+                    : "text-[#6B7280]"
+                }`}
+              >
+                {opinionLabels[report.opinion]}
+              </p>
+            </div>
+            {report.targetPrice && (
+              <div>
+                <p className="text-xs text-[#6B7280]">목표가</p>
+                <p className="mt-1 text-lg font-bold text-[#1A1A1A]">
+                  {formatNumber(report.targetPrice)}원
+                </p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-[#6B7280]">리스크</p>
+              <div className="mt-1 flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i <= riskLevel
+                        ? "fill-[#F59E0B] text-[#F59E0B]"
+                        : "text-[#E5E7EB]"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {report.keyPoints.length > 0 && (
+            <>
+              <Separator className="my-4" />
+              <div>
+                <p className="mb-3 text-sm font-semibold text-[#1A1A1A]">
+                  핵심 포인트
+                </p>
+                <ul className="space-y-2">
+                  {report.keyPoints.map((point, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-[#4A6D8C]">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#2E8B57]" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Report body (mock content) */}
+      <article className="prose prose-lg mx-auto max-w-none">
+        <h2 className="text-xl font-bold text-[#1A1A1A]">1. 기업 개요</h2>
+        <p className="leading-relaxed text-[#4A6D8C]">
+          {report.stock?.name}({report.stock?.code})은 {report.stock?.sector}{" "}
+          섹터에 속한 {report.stock?.market} 상장 기업으로, 독자적인 기술력과
+          파이프라인을 기반으로 성장하고 있습니다. 현재 시가총액 기준으로
+          증권사 커버리지가 부재한 상태이며, 이에 따라 시장에서의 정보
+          비대칭이 존재합니다.
+        </p>
+
+        <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
+          2. 투자 포인트
+        </h2>
+        <p className="leading-relaxed text-[#4A6D8C]">
+          핵심 투자 포인트는 다음과 같습니다. 첫째, 기존 사업부의 안정적인
+          성장세가 지속되고 있습니다. 둘째, 신규 사업 영역으로의 확장을 통해
+          중장기 성장 동력을 확보하고 있습니다. 셋째, 경영진의 주주 친화적
+          정책이 기업 가치 제고에 기여하고 있습니다.
+        </p>
+
+        {/* Mock financial table */}
+        <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
+          3. 주요 재무 지표
+        </h2>
+        <div className="mt-4 overflow-x-auto rounded-xl border border-[#E5E7EB]">
+          <table className="w-full text-sm">
+            <thead className="bg-[#F7F8FA]">
+              <tr>
+                <th className="px-4 py-3 text-left font-semibold text-[#1A1A1A]">
+                  항목
+                </th>
+                <th className="px-4 py-3 text-right font-semibold text-[#1A1A1A]">
+                  2024A
+                </th>
+                <th className="px-4 py-3 text-right font-semibold text-[#1A1A1A]">
+                  2025E
+                </th>
+                <th className="px-4 py-3 text-right font-semibold text-[#1A1A1A]">
+                  2026E
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#E5E7EB]">
+              <tr>
+                <td className="px-4 py-3 text-[#4A6D8C]">매출액 (억원)</td>
+                <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
+                  1,234
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
+                  1,567
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                  2,103
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-[#4A6D8C]">영업이익 (억원)</td>
+                <td className="px-4 py-3 text-right font-mono text-[#C94040]">
+                  -89
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
+                  45
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                  312
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 text-[#4A6D8C]">순이익 (억원)</td>
+                <td className="px-4 py-3 text-right font-mono text-[#C94040]">
+                  -156
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#1A1A1A]">
+                  12
+                </td>
+                <td className="px-4 py-3 text-right font-mono text-[#2E8B57]">
+                  245
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
+          4. 리스크 요인
+        </h2>
+        <p className="leading-relaxed text-[#4A6D8C]">
+          주요 리스크 요인으로는 파이프라인 개발 지연 가능성, 경쟁 심화에
+          따른 마진 압박, 그리고 거시경제 불확실성이 있습니다. 다만, 이러한
+          리스크는 현재 주가에 상당 부분 반영되어 있다고 판단합니다.
+        </p>
+
+        <h2 className="mt-8 text-xl font-bold text-[#1A1A1A]">
+          5. 밸류에이션 및 결론
+        </h2>
+        <p className="leading-relaxed text-[#4A6D8C]">
+          목표가 {report.targetPrice ? formatNumber(report.targetPrice) : "-"}
+          원은 2026년 추정 실적 기준 PER 배수를 적용하여 산출하였습니다.
+          현재가 대비 충분한 상승 여력이 있다고 판단하며,{" "}
+          {opinionLabels[report.opinion ?? "NONE"]} 의견을 제시합니다.
+        </p>
+      </article>
+
+      {/* Like button */}
+      <div className="mt-10 flex justify-center">
+        <button className="flex items-center gap-2 rounded-full border border-[#E5E7EB] px-6 py-3 text-sm font-medium text-[#6B7280] transition-colors hover:border-[#C94040] hover:text-[#C94040]">
+          <Heart className="h-5 w-5" />
+          도움이 됐어요 {formatNumber(report.likeCount)}
+        </button>
+      </div>
+
+      {/* Author card */}
+      <div className="mt-10 rounded-2xl border border-[#E5E7EB] bg-[#F7F8FA] p-6">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#0D2137] text-lg font-bold text-white">
+            {report.author.name[0]}
+          </div>
+          <div>
+            <Link
+              href={`/analysts/${report.author.id}`}
+              className="font-semibold text-[#1A1A1A] hover:underline"
+            >
+              {report.author.name} 애널리스트
+            </Link>
+            <p className="mt-0.5 text-sm text-[#6B7280]">
+              {report.author.bio}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Disclaimer */}
+      <details className="mt-8 rounded-2xl border border-[#E5E7EB] p-4">
+        <summary className="cursor-pointer text-sm font-medium text-[#6B7280]">
+          투자 유의사항 및 법적 고지
+        </summary>
+        <div className="mt-3 space-y-2 text-xs leading-relaxed text-[#6B7280]">
+          <p>
+            본 리포트는 투자 참고 자료이며, 투자 권유를 목적으로 하지 않습니다.
+            투자 판단의 최종 책임은 투자자 본인에게 있습니다.
+          </p>
+          <p>
+            작성자는 본 리포트에 언급된 종목에 대해 작성 시점 기준 이해관계가
+            없음을 고지합니다.
+          </p>
+          <p>
+            본 리포트의 내용은 작성 시점의 판단이며, 이후 시장 상황 변화에
+            따라 변경될 수 있습니다.
+          </p>
+        </div>
+      </details>
+
+      {/* Related reports */}
+      {relatedReports.length > 0 && (
+        <div className="mt-12">
+          <h2 className="mb-6 text-xl font-bold text-[#1A1A1A]">
+            관련 리포트
+          </h2>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {relatedReports.map((r) => (
+              <ReportCard key={r.id} report={r} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
