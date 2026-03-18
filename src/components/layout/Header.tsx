@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, Search, User, Globe, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, Search, User, Globe, LogOut, ChevronDown, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { SearchModal } from "@/components/search/SearchModal";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,6 +19,7 @@ export function Header() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { lang, toggleLang, t } = useLang();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { href: "/reports", label: t("리포트", "Reports") },
@@ -49,7 +52,17 @@ export function Header() {
           </nav>
 
           {/* Desktop actions */}
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
+            {/* Dark mode toggle */}
+            <button
+              onClick={toggleTheme}
+              className="rounded-xl p-2 text-[#6B7280] transition-colors hover:bg-[#FAFAF9] hover:text-[#1C1917]"
+              title={theme === "light" ? t("다크 모드", "Dark mode") : t("라이트 모드", "Light mode")}
+            >
+              {theme === "light" ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+            </button>
+
+            {/* Language toggle */}
             <button
               onClick={toggleLang}
               className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] px-3 py-1.5 text-xs font-semibold text-[#6B7280] transition-colors hover:border-[#1C1917] hover:text-[#1C1917]"
@@ -57,12 +70,17 @@ export function Header() {
               <Globe className="h-3.5 w-3.5" />
               {lang === "ko" ? "ENG" : "KOR"}
             </button>
+
+            {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
               className="rounded-xl p-2 text-[#6B7280] transition-colors hover:bg-[#FAFAF9] hover:text-[#1C1917]"
             >
               <Search className="h-5 w-5" />
             </button>
+
+            {/* Notification bell */}
+            <NotificationBell />
 
             {user ? (
               /* Logged-in user menu */
@@ -121,20 +139,27 @@ export function Header() {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile actions */}
+          <div className="flex items-center gap-1 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="rounded-lg p-2 text-[#6B7280]"
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
             <button
               onClick={() => setSearchOpen(true)}
               className="rounded-lg p-2 text-[#6B7280]"
             >
               <Search className="h-5 w-5" />
             </button>
+            <NotificationBell />
             <button
               onClick={toggleLang}
               className="flex items-center gap-1 rounded-full border border-[#E5E7EB] px-2.5 py-1 text-xs font-semibold text-[#6B7280]"
             >
               <Globe className="h-3 w-3" />
-              {lang === "ko" ? "ENG" : "KOR"}
+              {lang === "ko" ? "EN" : "KO"}
             </button>
             <button
               className="rounded-lg p-2"

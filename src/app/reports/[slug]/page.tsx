@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { mockReports, opinionLabels, formatNumber, reportTypeLabels } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
+import { CommentSection } from "@/components/report/CommentSection";
 import { useLang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { event as gtagEvent } from "@/lib/gtag";
@@ -278,6 +279,7 @@ export default function ReportDetailPage({
                 report_id: report.id,
                 stock_code: report.stock?.code ?? "",
               });
+              window.print();
             }}
           >
             <Download className="mr-1.5 h-4 w-4" />
@@ -568,6 +570,9 @@ export default function ReportDetailPage({
           </p>
         </div>
       </details>
+
+      {/* Comments */}
+      <CommentSection reportId={report.id} />
 
       {/* Related reports */}
       {relatedReports.length > 0 && (

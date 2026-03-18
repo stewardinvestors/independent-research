@@ -7,6 +7,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { NotificationProvider } from "@/contexts/NotificationContext";
 
 // Dynamic import to avoid SSR issues with Three.js
 const FlintIntro = dynamic(
@@ -29,25 +31,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const handleIntroComplete = useCallback(() => {
     setIntroFinished(true);
     sessionStorage.setItem("intro-seen", "1");
-    // Remove intro after fade-out transition
     setTimeout(() => setShowIntro(false), 900);
   }, []);
 
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        {showIntro && <FlintIntro onComplete={handleIntroComplete} />}
+    <ThemeProvider>
+      <AuthProvider>
+        <NotificationProvider>
+          <LanguageProvider>
+            {showIntro && <FlintIntro onComplete={handleIntroComplete} />}
 
-        <motion.div
-          initial={showIntro ? { opacity: 0 } : { opacity: 1 }}
-          animate={introFinished ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
-        >
-          <Header />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </motion.div>
-      </LanguageProvider>
-    </AuthProvider>
+            <motion.div
+              initial={showIntro ? { opacity: 0 } : { opacity: 1 }}
+              animate={introFinished ? { opacity: 1 } : {}}
+              transition={{ duration: 0.8 }}
+            >
+              <Header />
+              <main className="min-h-screen">{children}</main>
+              <Footer />
+            </motion.div>
+          </LanguageProvider>
+        </NotificationProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

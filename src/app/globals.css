@@ -128,3 +128,117 @@
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+/* ══════════ Dark Mode ══════════ */
+html.dark {
+  color-scheme: dark;
+  --background: oklch(0.12 0 0);
+  --foreground: oklch(0.93 0 0);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.93 0 0);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.93 0 0);
+  --primary: oklch(0.93 0 0);
+  --primary-foreground: oklch(0.15 0 0);
+  --secondary: oklch(0.2 0 0);
+  --secondary-foreground: oklch(0.93 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.2 0 0);
+  --accent-foreground: oklch(0.93 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.25 0.005 60);
+  --input: oklch(0.25 0.005 60);
+  --ring: oklch(0.5 0 0);
+}
+
+/* Dark mode global overrides for hardcoded colors */
+html.dark body { background-color: #0A0A0A; color: #E7E5E4; }
+
+/* Backgrounds */
+html.dark .bg-white { background-color: #1C1917 !important; }
+html.dark .bg-white\/80 { background-color: rgba(28,25,23,0.85) !important; }
+html.dark .bg-\[\#FAFAF9\] { background-color: #141211 !important; }
+html.dark .bg-\[\#1C1917\]\/5 { background-color: rgba(245,245,244,0.06) !important; }
+
+/* Text */
+html.dark .text-\[\#1A1A1A\] { color: #F5F5F4 !important; }
+html.dark .text-\[\#1C1917\] { color: #F5F5F4 !important; }
+html.dark .text-\[\#6B7280\] { color: #A8A29E !important; }
+html.dark .text-\[\#78716C\] { color: #A8A29E !important; }
+html.dark .text-\[\#A8A29E\] { color: #78716C !important; }
+
+/* Borders */
+html.dark .border-\[\#E5E7EB\] { border-color: #292524 !important; }
+html.dark .divide-\[\#E5E7EB\] > * + * { border-color: #292524 !important; }
+
+/* Header/Footer specifics */
+html.dark .bg-\[\#FAFAF9\] { background-color: #141211 !important; }
+html.dark thead.bg-\[\#FAFAF9\] { background-color: #1C1917 !important; }
+
+/* hover states */
+html.dark .hover\:bg-\[\#FAFAF9\]:hover { background-color: #292524 !important; }
+html.dark .hover\:text-\[\#1C1917\]:hover { color: #F5F5F4 !important; }
+html.dark .hover\:border-\[\#1C1917\]:hover { border-color: #F5F5F4 !important; }
+
+/* Gradient sections stay as-is (hero is already dark) */
+/* Cards in dark mode */
+html.dark .border-dashed { border-color: #292524 !important; }
+
+/* Scrollbar dark */
+html.dark ::-webkit-scrollbar-thumb { background: #44403C; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #57534E; }
+
+/* Skeleton dark */
+html.dark .skeleton-shimmer {
+  background: linear-gradient(90deg, #292524 25%, #1C1917 50%, #292524 75%);
+  background-size: 200% 100%;
+}
+
+/* ══════════ Print / PDF ══════════ */
+@media print {
+  /* Hide non-content elements */
+  header, footer, nav,
+  .no-print,
+  button, details,
+  [class*="sticky"] {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1A1A1A !important;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure text colors are print-friendly */
+  .text-\[\#78716C\] { color: #444 !important; }
+  .text-\[\#6B7280\] { color: #555 !important; }
+  .text-\[\#A8A29E\] { color: #666 !important; }
+  .text-\[\#EA580C\] { color: #EA580C !important; }
+  .text-\[\#C94040\] { color: #C94040 !important; }
+
+  /* Keep borders visible */
+  .border-\[\#E5E7EB\] { border-color: #ccc !important; }
+
+  /* Break page before related reports */
+  .mt-12 { page-break-before: auto; }
+
+  /* Print header */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #1C1917;
+  }
+
+  a { text-decoration: none !important; color: inherit !important; }
+  a[href]:after { content: none !important; }
+}
