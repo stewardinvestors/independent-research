@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { X, Eye, EyeOff, Flame } from "lucide-react";
+import Image from "next/image";
+import { X, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
@@ -140,9 +141,7 @@ export function AuthModal({ open, onClose, initialMode = "login" }: AuthModalPro
 
         {/* Logo */}
         <div className="mb-6 flex flex-col items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#0A0A0A]">
-            <Flame className="h-6 w-6 text-[#EA580C]" />
-          </div>
+          <Image src="/logo.jpg" alt="FLINT" width={48} height={48} className="rounded-xl bg-white p-0.5" />
           <h2 className="mt-3 text-xl font-bold text-[#1C1917]">
             {mode === "login"
               ? t("로그인", "Login")

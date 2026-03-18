@@ -14,7 +14,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-full lg:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/logo.svg" alt="Flint" width={32} height={32} className="rounded-lg" />
+              <Image src="/logo.jpg" alt="FLINT" width={36} height={36} className="rounded-lg bg-white p-0.5" />
               <span className="text-lg font-bold text-[#1C1917]">
                 Flint
               </span>

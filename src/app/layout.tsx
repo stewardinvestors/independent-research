@@ -16,15 +16,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flint | 작은 불꽃이 시장을 밝힙니다",
+  metadataBase: new URL("https://independent-research.vercel.app"),
+  title: "FLINT | 작은 불꽃이 시장을 밝힙니다",
   description:
-    "상장사의 85%는 아무도 분석하지 않습니다. Flint는 증권사 커버리지 바깥의 중소형 상장기업에 대한 독립 기업분석 리포트를 제공합니다.",
-  keywords: ["Flint", "기업분석", "중소형주", "리포트", "투자"],
+    "상장사의 85%는 아무도 분석하지 않습니다. FLINT는 증권사 커버리지 바깥의 중소형 상장기업에 대한 독립 기업분석 리포트를 제공합니다.",
+  keywords: ["FLINT", "기업분석", "중소형주", "리포트", "투자"],
+  icons: {
+    icon: "/favicon-32.png",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
-    title: "Flint | 작은 불꽃이 시장을 밝힙니다",
+    title: "FLINT | 작은 불꽃이 시장을 밝힙니다",
     description:
-      "상장사의 85%는 아무도 분석하지 않습니다. Flint 독립 기업분석 리포트 플랫폼.",
+      "상장사의 85%는 아무도 분석하지 않습니다. FLINT 독립 기업분석 리포트 플랫폼.",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FLINT",
+      },
+    ],
   },
 };
 

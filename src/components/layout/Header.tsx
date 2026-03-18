@@ -34,7 +34,7 @@ export function Header() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="Flint" width={32} height={32} className="rounded-lg" />
+            <Image src="/logo.jpg" alt="FLINT" width={36} height={36} className="rounded-lg bg-white p-0.5 dark:bg-white" />
             <span className="text-lg font-bold text-[#1C1917]">Flint</span>
           </Link>
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bookmark, Eye, Heart, UserCheck, FileText, Settings, LogOut, Flame } from "lucide-react";
+import Image from "next/image";
+import { Bookmark, Eye, Heart, UserCheck, FileText, Settings, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,9 +47,7 @@ export default function MyPage() {
     return (
       <>
         <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0A0A0A]">
-            <Flame className="h-8 w-8 text-[#EA580C]" />
-          </div>
+          <Image src="/logo.jpg" alt="FLINT" width={64} height={64} className="rounded-2xl bg-white p-1" />
           <h1 className="mt-6 text-2xl font-bold text-[#1A1A1A]">
             {t("로그인이 필요합니다", "Login Required")}
           </h1>
