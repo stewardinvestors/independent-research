@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Star,
   Calendar,
+  ShoppingCart,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { mockReports, opinionLabels, formatNumber, reportTypeLabels } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
 import { useLang } from "@/contexts/LanguageContext";
+import { event as gtagEvent } from "@/lib/gtag";
 
 export default function ReportDetailPage({
   params,
@@ -32,6 +34,7 @@ export default function ReportDetailPage({
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [bought, setBought] = useState(false);
 
   useEffect(() => {
     if (!report) return;
@@ -39,6 +42,32 @@ export default function ReportDetailPage({
     const storedCount = localStorage.getItem(`flint-like-count-${report.id}`);
     if (stored === "true") setLiked(true);
     setLikeCount(storedCount ? parseInt(storedCount, 10) : report.likeCount);
+    const storedBought = localStorage.getItem(`flint-bought-${report.id}`);
+    if (storedBought === "true") setBought(true);
+  }, [report]);
+
+  // GA4: 스크롤 90% 도달 시 report_read_complete 이벤트
+  useEffect(() => {
+    if (!report) return;
+    let fired = false;
+    const handleScroll = () => {
+      if (fired) return;
+      const scrollPercent =
+        (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+      if (scrollPercent >= 0.9) {
+        fired = true;
+        gtagEvent({
+          action: "report_read_complete",
+          category: "engagement",
+          label: report.slug,
+          report_id: report.id,
+          stock_code: report.stock?.code ?? "",
+        });
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [report]);
 
   const handleLike = () => {
@@ -49,6 +78,13 @@ export default function ReportDetailPage({
       setLikeCount(newCount);
       localStorage.setItem(`flint-likes-${report.id}`, "true");
       localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
+      gtagEvent({
+        action: "report_helpful",
+        category: "engagement",
+        label: report.slug,
+        report_id: report.id,
+        stock_code: report.stock?.code ?? "",
+      });
     } else {
       const newCount = likeCount - 1;
       setLiked(false);
@@ -56,6 +92,19 @@ export default function ReportDetailPage({
       localStorage.setItem(`flint-likes-${report.id}`, "false");
       localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
     }
+  };
+
+  const handleBought = () => {
+    if (!report || bought) return;
+    setBought(true);
+    localStorage.setItem(`flint-bought-${report.id}`, "true");
+    gtagEvent({
+      action: "report_bought",
+      category: "conversion",
+      label: report.slug,
+      report_id: report.id,
+      stock_code: report.stock?.code ?? "",
+    });
   };
 
   if (!report) {
@@ -158,6 +207,15 @@ export default function ReportDetailPage({
             variant="outline"
             size="sm"
             className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
+            onClick={() => {
+              gtagEvent({
+                action: "pdf_download",
+                category: "download",
+                label: report.slug,
+                report_id: report.id,
+                stock_code: report.stock?.code ?? "",
+              });
+            }}
           >
             <Download className="mr-1.5 h-4 w-4" />
             PDF
@@ -359,8 +417,19 @@ export default function ReportDetailPage({
         </p>
       </article>
 
-      {/* Like button */}
-      <div className="mt-10 flex justify-center">
+      {/* Action buttons */}
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <button
+          onClick={handleBought}
+          className={`flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-colors ${
+            bought
+              ? "border-[#EA580C] bg-[#EA580C]/5 text-[#EA580C]"
+              : "border-[#E5E7EB] text-[#6B7280] hover:border-[#EA580C] hover:text-[#EA580C]"
+          }`}
+        >
+          <ShoppingCart className={`h-5 w-5 ${bought ? "fill-[#EA580C]" : ""}`} />
+          {t("매수했어요", "I bought it")}
+        </button>
         <button
           onClick={handleLike}
           className={`flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-colors ${
