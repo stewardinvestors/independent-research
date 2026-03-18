@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useState, useEffect } from "react";
+import { use, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   Bookmark,
+  BookmarkCheck,
   Share2,
   Download,
   Eye,
@@ -14,6 +15,7 @@ import {
   Star,
   Calendar,
   ShoppingCart,
+  Check,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { mockReports, opinionLabels, formatNumber, reportTypeLabels } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
 import { useLang } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { event as gtagEvent } from "@/lib/gtag";
 
 export default function ReportDetailPage({
@@ -30,11 +33,25 @@ export default function ReportDetailPage({
 }) {
   const { slug } = use(params);
   const { t } = useLang();
+  const { user } = useAuth();
   const report = mockReports.find((r) => r.slug === slug);
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [bought, setBought] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [shareMsg, setShareMsg] = useState(false);
+
+  const bookmarkKey = user ? `flint-bookmarks-${user.id}` : "";
+
+  const getBookmarks = useCallback((): string[] => {
+    if (!user) return [];
+    try {
+      return JSON.parse(localStorage.getItem(bookmarkKey) || "[]");
+    } catch {
+      return [];
+    }
+  }, [user, bookmarkKey]);
 
   useEffect(() => {
     if (!report) return;
@@ -44,7 +61,12 @@ export default function ReportDetailPage({
     setLikeCount(storedCount ? parseInt(storedCount, 10) : report.likeCount);
     const storedBought = localStorage.getItem(`flint-bought-${report.id}`);
     if (storedBought === "true") setBought(true);
-  }, [report]);
+    // Bookmark
+    if (user) {
+      const bm = getBookmarks();
+      setBookmarked(bm.includes(report.id));
+    }
+  }, [report, user, getBookmarks]);
 
   // GA4: 스크롤 구간별 이벤트 (25%, 50%, 75%, 90%)
   useEffect(() => {
@@ -114,6 +136,37 @@ export default function ReportDetailPage({
     } else {
       setBought(false);
       localStorage.setItem(`flint-bought-${report.id}`, "false");
+    }
+  };
+
+  const handleBookmark = () => {
+    if (!report || !user) return;
+    const bm = getBookmarks();
+    if (bookmarked) {
+      const next = bm.filter((id) => id !== report.id);
+      localStorage.setItem(bookmarkKey, JSON.stringify(next));
+      setBookmarked(false);
+    } else {
+      bm.push(report.id);
+      localStorage.setItem(bookmarkKey, JSON.stringify(bm));
+      setBookmarked(true);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!report) return;
+    const url = window.location.href;
+    const text = `${report.title} - Flint`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: text, url });
+      } catch {
+        // user cancelled
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      setShareMsg(true);
+      setTimeout(() => setShareMsg(false), 2000);
     }
   };
 
@@ -233,18 +286,34 @@ export default function ReportDetailPage({
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
+            className={`rounded-xl border-[#E5E7EB] transition-colors ${
+              bookmarked
+                ? "border-[#EA580C] bg-[#EA580C]/5 text-[#EA580C]"
+                : "text-[#6B7280] hover:text-[#1C1917]"
+            }`}
+            onClick={handleBookmark}
+            disabled={!user}
+            title={!user ? t("로그인이 필요합니다", "Login required") : ""}
           >
-            <Bookmark className="mr-1.5 h-4 w-4" />
-            {t("북마크", "Bookmark")}
+            {bookmarked ? (
+              <BookmarkCheck className="mr-1.5 h-4 w-4" />
+            ) : (
+              <Bookmark className="mr-1.5 h-4 w-4" />
+            )}
+            {bookmarked ? t("북마크됨", "Bookmarked") : t("북마크", "Bookmark")}
           </Button>
           <Button
             variant="outline"
             size="sm"
             className="rounded-xl border-[#E5E7EB] text-[#6B7280] hover:text-[#1C1917]"
+            onClick={handleShare}
           >
-            <Share2 className="mr-1.5 h-4 w-4" />
-            {t("공유", "Share")}
+            {shareMsg ? (
+              <Check className="mr-1.5 h-4 w-4 text-[#10B981]" />
+            ) : (
+              <Share2 className="mr-1.5 h-4 w-4" />
+            )}
+            {shareMsg ? t("복사됨!", "Copied!") : t("공유", "Share")}
           </Button>
         </div>
       </header>
