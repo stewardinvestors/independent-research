@@ -3,28 +3,39 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Building2, FileText, Send } from "lucide-react";
-
-const steps = [
-  {
-    icon: Building2,
-    title: "기업 탐방 & 분석",
-    description: "증권사 커버리지 밖 기업을 직접 탐방하고 심층 분석합니다",
-  },
-  {
-    icon: FileText,
-    title: "리포트 발간",
-    description: "독립 애널리스트가 투자의견과 함께 리포트를 작성합니다",
-  },
-  {
-    icon: Send,
-    title: "투자자에게 전달",
-    description: "모든 투자자가 무료로 양질의 기업 분석 정보를 받습니다",
-  },
-];
+import { useLang } from "@/contexts/LanguageContext";
 
 export function HowItWorksSection() {
+  const { t } = useLang();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const steps = [
+    {
+      icon: Building2,
+      title: t("기업 탐방 & 분석", "Company Visits & Analysis"),
+      description: t(
+        "증권사 커버리지 밖 기업을 직접 탐방하고 심층 분석합니다",
+        "We visit and deeply analyze companies outside brokerage coverage"
+      ),
+    },
+    {
+      icon: FileText,
+      title: t("리포트 발간", "Report Publication"),
+      description: t(
+        "독립 애널리스트가 투자의견과 함께 리포트를 작성합니다",
+        "Independent analysts write reports with investment opinions"
+      ),
+    },
+    {
+      icon: Send,
+      title: t("투자자에게 전달", "Delivery to Investors"),
+      description: t(
+        "모든 투자자가 무료로 양질의 기업 분석 정보를 받습니다",
+        "All investors receive quality corporate analysis for free"
+      ),
+    },
+  ];
 
   return (
     <section ref={ref} className="bg-[#FAFAF9] py-24 sm:py-32">
@@ -36,10 +47,13 @@ export function HowItWorksSection() {
           className="text-center"
         >
           <h2 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
-            이렇게 작동합니다
+            {t("이렇게 작동합니다", "How It Works")}
           </h2>
           <p className="mt-3 text-[#6B7280]">
-            간단한 3단계로 정보 사각지대를 해소합니다
+            {t(
+              "간단한 3단계로 정보 사각지대를 해소합니다",
+              "Solving information blind spots in 3 simple steps"
+            )}
           </p>
         </motion.div>
 

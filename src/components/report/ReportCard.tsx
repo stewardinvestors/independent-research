@@ -5,12 +5,21 @@ import { Eye, Calendar, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Report } from "@/types";
 import { opinionLabels, formatNumber } from "@/data/mock";
+import { useLang } from "@/contexts/LanguageContext";
+
+const opinionLabelsEn: Record<string, string> = {
+  BUY: "Buy",
+  HOLD: "Hold",
+  SELL: "Sell",
+  NONE: "No Opinion",
+};
 
 interface ReportCardProps {
   report: Report;
 }
 
 export function ReportCard({ report }: ReportCardProps) {
+  const { t } = useLang();
   const currentPrice = report.targetPrice
     ? Math.round(report.targetPrice * 0.75)
     : undefined;
@@ -45,7 +54,7 @@ export function ReportCard({ report }: ReportCardProps) {
         {/* Stock info */}
         <div className="mt-4">
           <h3 className="text-lg font-bold text-[#1A1A1A] group-hover:text-[#EA580C]">
-            {report.stock?.name ?? "산업분석"}
+            {report.stock?.name ?? t("산업분석", "Industry Analysis")}
           </h3>
           {report.stock && (
             <p className="mt-0.5 text-xs text-[#6B7280]">
@@ -71,10 +80,10 @@ export function ReportCard({ report }: ReportCardProps) {
                   : "text-[#6B7280]"
               }`}
             >
-              {opinionLabels[report.opinion]}
+              {t(opinionLabels[report.opinion], opinionLabelsEn[report.opinion])}
             </span>
             <span className="text-sm font-bold text-[#1A1A1A]">
-              {formatNumber(report.targetPrice)}원
+              {formatNumber(report.targetPrice)}{t("원", " KRW")}
             </span>
             {upside > 0 ? (
               <span className="flex items-center gap-0.5 text-xs font-medium text-[#EA580C]">

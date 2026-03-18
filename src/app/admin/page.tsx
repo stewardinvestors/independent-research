@@ -12,46 +12,49 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockReports, mockAnalysts, formatNumber } from "@/data/mock";
-
-const statsCards = [
-  {
-    label: "총 리포트",
-    value: "156",
-    change: "+12",
-    icon: FileText,
-    color: "#1C1917",
-  },
-  {
-    label: "검토 대기",
-    value: "3",
-    change: null,
-    icon: Clock,
-    color: "#F59E0B",
-  },
-  {
-    label: "등록 애널리스트",
-    value: "24",
-    change: "+2",
-    icon: Users,
-    color: "#EA580C",
-  },
-  {
-    label: "이번 달 조회수",
-    value: "45,200",
-    change: "+15%",
-    icon: TrendingUp,
-    color: "#78716C",
-  },
-];
+import { useLang } from "@/contexts/LanguageContext";
 
 export default function AdminPage() {
+  const { t } = useLang();
+
+  const statsCards = [
+    {
+      label: t("총 리포트", "Total Reports"),
+      value: "156",
+      change: "+12",
+      icon: FileText,
+      color: "#1C1917",
+    },
+    {
+      label: t("검토 대기", "Pending Review"),
+      value: "3",
+      change: null,
+      icon: Clock,
+      color: "#F59E0B",
+    },
+    {
+      label: t("등록 애널리스트", "Registered Analysts"),
+      value: "24",
+      change: "+2",
+      icon: Users,
+      color: "#EA580C",
+    },
+    {
+      label: t("이번 달 조회수", "Monthly Views"),
+      value: "45,200",
+      change: "+15%",
+      icon: TrendingUp,
+      color: "#78716C",
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
-          관리자 대시보드
+          {t("관리자 대시보드", "Admin Dashboard")}
         </h1>
-        <p className="mt-2 text-[#6B7280]">플랫폼 운영 현황을 확인하세요</p>
+        <p className="mt-2 text-[#6B7280]">{t("플랫폼 운영 현황을 확인하세요", "Monitor platform operations")}</p>
       </div>
 
       {/* Stats */}
@@ -83,7 +86,7 @@ export default function AdminPage() {
       {/* Pending reviews */}
       <div className="mb-10">
         <h2 className="mb-4 text-lg font-bold text-[#1A1A1A]">
-          검토 대기 리포트
+          {t("검토 대기 리포트", "Pending Reports")}
         </h2>
         <div className="space-y-3">
           {mockReports.slice(0, 3).map((report) => (
@@ -104,7 +107,7 @@ export default function AdminPage() {
                   className="rounded-lg bg-[#EA580C] hover:bg-[#C2410C]"
                 >
                   <CheckCircle className="mr-1 h-4 w-4" />
-                  승인
+                  {t("승인", "Approve")}
                 </Button>
                 <Button
                   size="sm"
@@ -112,7 +115,7 @@ export default function AdminPage() {
                   className="rounded-lg border-[#C94040] text-[#C94040] hover:bg-[#C94040] hover:text-white"
                 >
                   <XCircle className="mr-1 h-4 w-4" />
-                  반려
+                  {t("반려", "Reject")}
                 </Button>
               </div>
             </div>
@@ -123,7 +126,7 @@ export default function AdminPage() {
       {/* Recent analysts */}
       <div>
         <h2 className="mb-4 text-lg font-bold text-[#1A1A1A]">
-          등록 애널리스트
+          {t("등록 애널리스트", "Registered Analysts")}
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {mockAnalysts.map((analyst) => (
@@ -137,7 +140,7 @@ export default function AdminPage() {
               <div className="flex-1">
                 <p className="font-medium text-[#1A1A1A]">{analyst.name}</p>
                 <p className="text-xs text-[#6B7280]">
-                  리포트 {analyst.reportCount}건 | 조회{" "}
+                  {t("리포트", "Reports")} {analyst.reportCount}{t("건", "")} | {t("조회", "Views")}{" "}
                   {formatNumber(analyst.totalViews)}
                 </p>
               </div>
@@ -145,7 +148,7 @@ export default function AdminPage() {
                 variant="secondary"
                 className="rounded-full bg-[#EA580C]/10 text-xs text-[#EA580C]"
               >
-                활동중
+                {t("활동중", "Active")}
               </Badge>
             </div>
           ))}

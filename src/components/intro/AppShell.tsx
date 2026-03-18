@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 // Dynamic import to avoid SSR issues with Three.js
 const FlintIntro = dynamic(
@@ -32,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <>
+    <LanguageProvider>
       {showIntro && <FlintIntro onComplete={handleIntroComplete} />}
 
       <motion.div
@@ -44,6 +45,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="min-h-screen">{children}</main>
         <Footer />
       </motion.div>
-    </>
+    </LanguageProvider>
   );
 }

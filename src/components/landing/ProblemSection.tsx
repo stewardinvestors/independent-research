@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { useLang } from "@/contexts/LanguageContext";
 
 function CountUp({ end, duration = 2 }: { end: number; duration?: number }) {
   const [count, setCount] = useState(0);
@@ -28,6 +29,7 @@ function CountUp({ end, duration = 2 }: { end: number; duration?: number }) {
 }
 
 export function ProblemSection() {
+  const { t } = useLang();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -72,7 +74,9 @@ export function ProblemSection() {
                 <span className="text-4xl font-bold text-[#1C1917]">
                   14.3%
                 </span>
-                <span className="mt-1 text-sm text-[#6B7280]">실질 커버리지</span>
+                <span className="mt-1 text-sm text-[#6B7280]">
+                  {t("실질 커버리지", "Actual Coverage")}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -84,30 +88,30 @@ export function ProblemSection() {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <h2 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
-              대부분의 상장사는
+              {t("대부분의 상장사는", "Most listed companies are")}
               <br />
-              정보 사각지대에 있습니다
+              {t("정보 사각지대에 있습니다", "in an information blind spot")}
             </h2>
 
             <div className="mt-8 space-y-6">
               <div className="rounded-2xl border border-[#E5E7EB] bg-[#FAFAF9] p-5">
-                <p className="text-sm text-[#6B7280]">전체 상장사</p>
+                <p className="text-sm text-[#6B7280]">{t("전체 상장사", "Total Listed Companies")}</p>
                 <p className="mt-1 text-3xl font-bold text-[#1C1917]">
-                  <CountUp end={2674} />개
+                  <CountUp end={2674} />{t("개", "")}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5">
-                  <p className="text-sm text-[#6B7280]">실질 커버</p>
+                  <p className="text-sm text-[#6B7280]">{t("실질 커버", "Covered")}</p>
                   <p className="mt-1 text-2xl font-bold text-[#1C1917]">
-                    <CountUp end={382} />개
+                    <CountUp end={382} />{t("개", "")}
                   </p>
                   <p className="text-xs text-[#78716C]">14.3%</p>
                 </div>
                 <div className="rounded-2xl border border-[#C94040]/20 bg-[#C94040]/5 p-5">
-                  <p className="text-sm text-[#6B7280]">정보 사각지대</p>
+                  <p className="text-sm text-[#6B7280]">{t("정보 사각지대", "Blind Spot")}</p>
                   <p className="mt-1 text-2xl font-bold text-[#C94040]">
-                    <CountUp end={2292} />개
+                    <CountUp end={2292} />{t("개", "")}
                   </p>
                   <p className="text-xs text-[#C94040]">85.7%</p>
                 </div>

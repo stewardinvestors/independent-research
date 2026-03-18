@@ -6,6 +6,7 @@ import { ArrowLeft, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { mockStocks, mockReports, formatMarketCap, opinionLabels } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
+import { useLang } from "@/contexts/LanguageContext";
 
 export default function StockPage({
   params,
@@ -13,6 +14,7 @@ export default function StockPage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = use(params);
+  const { t } = useLang();
   const stock = mockStocks.find((s) => s.code === code);
   const stockReports = mockReports.filter((r) => r.stock?.code === code);
 
@@ -20,13 +22,13 @@ export default function StockPage({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <h1 className="text-2xl font-bold text-[#1A1A1A]">
-          종목을 찾을 수 없습니다
+          {t("종목을 찾을 수 없습니다", "Stock not found")}
         </h1>
         <Link
           href="/reports"
           className="mt-4 text-sm text-[#1C1917] hover:underline"
         >
-          리포트 목록으로 돌아가기
+          {t("리포트 목록으로 돌아가기", "Back to reports")}
         </Link>
       </div>
     );
@@ -44,7 +46,7 @@ export default function StockPage({
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#1C1917]"
       >
         <ArrowLeft className="h-4 w-4" />
-        뒤로
+        {t("뒤로", "Back")}
       </Link>
 
       {/* Stock header */}
@@ -64,21 +66,21 @@ export default function StockPage({
 
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <div>
-            <p className="text-sm text-[#6B7280]">시가총액</p>
+            <p className="text-sm text-[#6B7280]">{t("시가총액", "Market Cap")}</p>
             <p className="mt-1 text-xl font-bold text-[#1A1A1A]">
               {formatMarketCap(stock.marketCap)}
             </p>
           </div>
           <div>
-            <p className="text-sm text-[#6B7280]">산업 분류</p>
+            <p className="text-sm text-[#6B7280]">{t("산업 분류", "Sector")}</p>
             <p className="mt-1 text-xl font-bold text-[#1A1A1A]">
               {stock.sector}
             </p>
           </div>
           <div>
-            <p className="text-sm text-[#6B7280]">발간 리포트</p>
+            <p className="text-sm text-[#6B7280]">{t("발간 리포트", "Published Reports")}</p>
             <p className="mt-1 text-xl font-bold text-[#1A1A1A]">
-              {stockReports.length}건
+              {stockReports.length}{t("건", "")}
             </p>
           </div>
         </div>
@@ -87,7 +89,7 @@ export default function StockPage({
         {total > 0 && (
           <div className="mt-6">
             <p className="mb-3 text-sm font-semibold text-[#1A1A1A]">
-              투자의견 컨센서스
+              {t("투자의견 컨센서스", "Opinion Consensus")}
             </p>
             <div className="flex h-6 overflow-hidden rounded-full">
               {buyCount > 0 && (
@@ -95,7 +97,7 @@ export default function StockPage({
                   className="flex items-center justify-center bg-[#EA580C] text-xs font-medium text-white"
                   style={{ width: `${(buyCount / total) * 100}%` }}
                 >
-                  매수 {buyCount}
+                  {t("매수", "Buy")} {buyCount}
                 </div>
               )}
               {holdCount > 0 && (
@@ -103,7 +105,7 @@ export default function StockPage({
                   className="flex items-center justify-center bg-[#F59E0B] text-xs font-medium text-white"
                   style={{ width: `${(holdCount / total) * 100}%` }}
                 >
-                  중립 {holdCount}
+                  {t("중립", "Hold")} {holdCount}
                 </div>
               )}
               {sellCount > 0 && (
@@ -111,7 +113,7 @@ export default function StockPage({
                   className="flex items-center justify-center bg-[#C94040] text-xs font-medium text-white"
                   style={{ width: `${(sellCount / total) * 100}%` }}
                 >
-                  매도 {sellCount}
+                  {t("매도", "Sell")} {sellCount}
                 </div>
               )}
             </div>
@@ -120,7 +122,7 @@ export default function StockPage({
       </div>
 
       {/* Reports timeline */}
-      <h2 className="mb-6 text-xl font-bold text-[#1A1A1A]">리포트 타임라인</h2>
+      <h2 className="mb-6 text-xl font-bold text-[#1A1A1A]">{t("리포트 타임라인", "Report Timeline")}</h2>
       {stockReports.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {stockReports.map((report) => (
@@ -130,7 +132,7 @@ export default function StockPage({
       ) : (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E7EB] py-16">
           <TrendingUp className="h-10 w-10 text-[#E5E7EB]" />
-          <p className="mt-4 text-[#6B7280]">아직 발간된 리포트가 없습니다</p>
+          <p className="mt-4 text-[#6B7280]">{t("아직 발간된 리포트가 없습니다", "No reports published yet")}</p>
         </div>
       )}
     </div>

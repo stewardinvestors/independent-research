@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAnalysts, mockReports, formatNumber } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
+import { useLang } from "@/contexts/LanguageContext";
 
 export default function AnalystPage({
   params,
@@ -14,6 +15,7 @@ export default function AnalystPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const { t } = useLang();
   const analyst = mockAnalysts.find((a) => a.id === id);
   const analystReports = mockReports.filter((r) => r.authorId === id);
 
@@ -21,13 +23,13 @@ export default function AnalystPage({
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center">
         <h1 className="text-2xl font-bold text-[#1A1A1A]">
-          애널리스트를 찾을 수 없습니다
+          {t("애널리스트를 찾을 수 없습니다", "Analyst not found")}
         </h1>
         <Link
           href="/reports"
           className="mt-4 text-sm text-[#1C1917] hover:underline"
         >
-          리포트 목록으로 돌아가기
+          {t("리포트 목록으로 돌아가기", "Back to reports")}
         </Link>
       </div>
     );
@@ -40,7 +42,7 @@ export default function AnalystPage({
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#1C1917]"
       >
         <ArrowLeft className="h-4 w-4" />
-        뒤로
+        {t("뒤로", "Back")}
       </Link>
 
       {/* Profile card */}
@@ -70,14 +72,14 @@ export default function AnalystPage({
           </div>
           <Button className="rounded-xl bg-[#EA580C] hover:bg-[#C2410C]">
             <UserPlus className="mr-1.5 h-4 w-4" />
-            팔로우
+            {t("팔로우", "Follow")}
           </Button>
         </div>
 
         <div className="mt-6 grid grid-cols-3 gap-4 rounded-xl bg-[#FAFAF9] p-4">
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
-              <FileText className="h-3 w-3" /> 리포트
+              <FileText className="h-3 w-3" /> {t("리포트", "Reports")}
             </p>
             <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {analyst.reportCount}
@@ -85,14 +87,14 @@ export default function AnalystPage({
           </div>
           <div className="text-center">
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
-              <Eye className="h-3 w-3" /> 총 조회수
+              <Eye className="h-3 w-3" /> {t("총 조회수", "Total Views")}
             </p>
             <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {formatNumber(analyst.totalViews)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-[#6B7280]">평균 조회수</p>
+            <p className="text-xs text-[#6B7280]">{t("평균 조회수", "Avg. Views")}</p>
             <p className="mt-1 text-xl font-bold text-[#1C1917]">
               {analyst.reportCount > 0
                 ? formatNumber(
@@ -105,7 +107,7 @@ export default function AnalystPage({
       </div>
 
       {/* Reports */}
-      <h2 className="mb-6 text-xl font-bold text-[#1A1A1A]">발간 리포트</h2>
+      <h2 className="mb-6 text-xl font-bold text-[#1A1A1A]">{t("발간 리포트", "Published Reports")}</h2>
       {analystReports.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {analystReports.map((report) => (
@@ -114,7 +116,7 @@ export default function AnalystPage({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E5E7EB] py-16">
-          <p className="text-[#6B7280]">아직 발간된 리포트가 없습니다</p>
+          <p className="text-[#6B7280]">{t("아직 발간된 리포트가 없습니다", "No reports published yet")}</p>
         </div>
       )}
     </div>

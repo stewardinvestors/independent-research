@@ -6,8 +6,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { mockReports } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
+import { useLang } from "@/contexts/LanguageContext";
 
 export function LatestReportsSection() {
+  const { t } = useLang();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const latestReports = mockReports.slice(0, 4);
@@ -23,17 +25,17 @@ export function LatestReportsSection() {
         >
           <div>
             <h2 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
-              최신 리포트
+              {t("최신 리포트", "Latest Reports")}
             </h2>
             <p className="mt-2 text-[#6B7280]">
-              방금 발간된 독립 기업분석 리포트
+              {t("방금 발간된 독립 기업분석 리포트", "Recently published independent analysis reports")}
             </p>
           </div>
           <Link
             href="/reports"
             className="hidden items-center gap-1 text-sm font-medium text-[#1C1917] hover:underline sm:flex"
           >
-            전체 보기
+            {t("전체 보기", "View All")}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>
@@ -59,7 +61,7 @@ export function LatestReportsSection() {
           href="/reports"
           className="mt-8 flex items-center justify-center gap-1 text-sm font-medium text-[#1C1917] hover:underline sm:hidden"
         >
-          전체 보기
+          {t("전체 보기", "View All")}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
