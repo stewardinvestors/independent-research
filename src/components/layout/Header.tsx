@@ -18,7 +18,7 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { lang, toggleLang, t } = useLang();
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
@@ -112,6 +112,16 @@ export function Header() {
                         <User className="h-4 w-4 text-[#6B7280]" />
                         {t("마이페이지", "My Page")}
                       </Link>
+                      {isAdmin && (
+                        <Link
+                          href="/write"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-[#EA580C] hover:bg-[#FAFAF9]"
+                        >
+                          <span className="flex h-4 w-4 items-center justify-center rounded bg-[#EA580C] text-[10px] font-bold text-white">A</span>
+                          {t("리포트 작성", "Write Report")}
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           logout();

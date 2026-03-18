@@ -17,6 +17,7 @@ interface AuthUser extends User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string) => { ok: boolean; error?: string };
   register: (name: string, email: string, password: string) => { ok: boolean; error?: string };
   logout: () => void;
@@ -26,6 +27,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
+  isAdmin: false,
   login: () => ({ ok: false }),
   register: () => ({ ok: false }),
   logout: () => {},
@@ -34,6 +36,17 @@ const AuthContext = createContext<AuthContextType>({
 
 const USERS_KEY = "flint-users";
 const SESSION_KEY = "flint-session";
+
+// Default admin account
+const ADMIN_ACCOUNT: AuthUser = {
+  id: "admin-001",
+  email: "admin@flint.kr",
+  name: "FLINT Admin",
+  role: "ADMIN" as Role,
+  coverSectors: [],
+  createdAt: "2024-01-01",
+  password: "flint2026!",
+};
 
 function getStoredUsers(): AuthUser[] {
   if (typeof window === "undefined") return [];
@@ -46,6 +59,14 @@ function getStoredUsers(): AuthUser[] {
 
 function setStoredUsers(users: AuthUser[]) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function ensureAdminExists() {
+  const users = getStoredUsers();
+  const adminExists = users.some((u) => u.email === ADMIN_ACCOUNT.email);
+  if (!adminExists) {
+    setStoredUsers([ADMIN_ACCOUNT, ...users]);
+  }
 }
 
 function getSession(): string | null {
@@ -71,8 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Restore session on mount
   useEffect(() => {
+    ensureAdminExists();
     const email = getSession();
     if (email) {
       const users = getStoredUsers();
@@ -83,6 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback((email: string, password: string) => {
+    ensureAdminExists();
     const users = getStoredUsers();
     const found = users.find((u) => u.email === email);
     if (!found) return { ok: false, error: "존재하지 않는 계정입니다." };
@@ -134,8 +156,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [user]
   );
 
+  const isAdmin = user?.role === "ADMIN";
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout, updateProfile }}>
+    <AuthContext.Provider value={{ user, isLoading, isAdmin, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

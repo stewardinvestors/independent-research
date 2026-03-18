@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Search,
   ChevronRight,
@@ -8,16 +9,23 @@ import {
   X,
   GripVertical,
   FileUp,
+  ShieldAlert,
+  CheckCircle2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mockStocks } from "@/data/mock";
 import { useLang } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import type { Stock, ReportType, Opinion } from "@/types";
+
+const REPORTS_KEY = "flint-custom-reports";
 
 export default function WritePage() {
   const { t } = useLang();
+  const { user, isAdmin, isLoading } = useAuth();
+  const router = useRouter();
 
   const reportTypes: { label: string; value: ReportType }[] = [
     { label: t("기업분석", "Company Analysis"), value: "COMPANY" },
@@ -32,6 +40,7 @@ export default function WritePage() {
     { label: t("매도", "Sell"), value: "SELL", color: "bg-[#C94040] text-white" },
     { label: t("의견 없음", "No Opinion"), value: "NONE", color: "bg-[#6B7280] text-white" },
   ];
+
   const [step, setStep] = useState(1);
   const [stockSearch, setStockSearch] = useState("");
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
@@ -43,6 +52,8 @@ export default function WritePage() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [content, setContent] = useState("");
+  const [publishing, setPublishing] = useState(false);
+  const [published, setPublished] = useState(false);
 
   const filteredStocks = stockSearch
     ? mockStocks.filter(
@@ -73,11 +84,149 @@ export default function WritePage() {
     }
   };
 
+  const handlePublish = () => {
+    if (!user || !isAdmin || !selectedStock || !title || !content) return;
+    setPublishing(true);
+
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9가-힣\s]/g, "")
+      .replace(/\s+/g, "-")
+      .slice(0, 60) + "-" + Date.now().toString(36);
+
+    const newReport = {
+      id: `custom-${crypto.randomUUID()}`,
+      title,
+      slug,
+      type,
+      status: "PUBLISHED",
+      opinion,
+      targetPrice: targetPrice ? parseInt(targetPrice, 10) : undefined,
+      keyPoints: keyPoints.filter((p) => p.trim()),
+      tags,
+      viewCount: 0,
+      likeCount: 0,
+      readTime: Math.max(5, Math.ceil(content.length / 500)),
+      authorId: user.id,
+      author: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        coverSectors: user.coverSectors,
+        createdAt: user.createdAt,
+      },
+      stockId: selectedStock.id,
+      stock: selectedStock,
+      content,
+      publishedAt: new Date().toISOString().slice(0, 10),
+      createdAt: new Date().toISOString().slice(0, 10),
+      updatedAt: new Date().toISOString().slice(0, 10),
+    };
+
+    // Save to localStorage
+    try {
+      const existing = JSON.parse(localStorage.getItem(REPORTS_KEY) || "[]");
+      existing.unshift(newReport);
+      localStorage.setItem(REPORTS_KEY, JSON.stringify(existing));
+    } catch {
+      localStorage.setItem(REPORTS_KEY, JSON.stringify([newReport]));
+    }
+
+    setTimeout(() => {
+      setPublishing(false);
+      setPublished(true);
+    }, 800);
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#EA580C] border-t-transparent" />
+      </div>
+    );
+  }
+
+  // Not admin → access denied
+  if (!user || !isAdmin) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50">
+          <ShieldAlert className="h-8 w-8 text-[#C94040]" />
+        </div>
+        <h1 className="mt-6 text-2xl font-bold text-[#1A1A1A]">
+          {t("접근 권한이 없습니다", "Access Denied")}
+        </h1>
+        <p className="mt-2 text-sm text-[#6B7280]">
+          {t(
+            "리포트 작성은 관리자만 가능합니다.",
+            "Only administrators can write reports."
+          )}
+        </p>
+        <Button
+          onClick={() => router.push("/reports")}
+          variant="outline"
+          className="mt-6 rounded-xl"
+        >
+          {t("리포트 목록으로", "Go to Reports")}
+        </Button>
+      </div>
+    );
+  }
+
+  // Published success
+  if (published) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-50">
+          <CheckCircle2 className="h-8 w-8 text-[#10B981]" />
+        </div>
+        <h1 className="mt-6 text-2xl font-bold text-[#1A1A1A]">
+          {t("리포트가 발행되었습니다!", "Report Published!")}
+        </h1>
+        <p className="mt-2 text-sm text-[#6B7280]">
+          {t("리포트 목록에서 확인하실 수 있습니다.", "You can find it in the reports list.")}
+        </p>
+        <div className="mt-6 flex gap-3">
+          <Button
+            onClick={() => router.push("/reports")}
+            className="rounded-xl bg-[#1C1917] text-white hover:bg-[#292524]"
+          >
+            {t("리포트 목록", "View Reports")}
+          </Button>
+          <Button
+            onClick={() => {
+              setPublished(false);
+              setStep(1);
+              setSelectedStock(null);
+              setTitle("");
+              setContent("");
+              setKeyPoints([""]);
+              setTags([]);
+              setTargetPrice("");
+              setStockSearch("");
+            }}
+            variant="outline"
+            className="rounded-xl"
+          >
+            {t("새 리포트 작성", "Write Another")}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <h1 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
-        {t("리포트 작성", "Write Report")}
-      </h1>
+      <div className="mb-2 flex items-center gap-2">
+        <Badge className="rounded-full bg-[#EA580C] text-xs text-white">
+          ADMIN
+        </Badge>
+        <h1 className="text-2xl font-bold text-[#1A1A1A] sm:text-3xl">
+          {t("리포트 작성", "Write Report")}
+        </h1>
+      </div>
       <p className="mt-2 text-[#6B7280]">
         {t("독립 기업분석 리포트를 작성하고 발간하세요", "Write and publish independent corporate analysis reports")}
       </p>
@@ -363,9 +512,6 @@ export default function WritePage() {
               onChange={(e) => setContent(e.target.value)}
               className="h-96 w-full rounded-xl border border-[#E5E7EB] p-4 text-sm leading-relaxed focus:border-[#EA580C] focus:outline-none focus:ring-1 focus:ring-[#EA580C]"
             />
-            <p className="mt-1 text-xs text-[#6B7280]">
-              {t("* 추후 Tiptap 리치 에디터가 적용될 예정입니다", "* Rich text editor (Tiptap) will be available soon")}
-            </p>
           </div>
 
           {/* PDF upload */}
@@ -399,8 +545,12 @@ export default function WritePage() {
               >
                 {t("임시저장", "Save Draft")}
               </Button>
-              <Button className="h-12 rounded-xl bg-[#EA580C] px-8 hover:bg-[#C2410C]">
-                {t("발행하기", "Publish")}
+              <Button
+                onClick={handlePublish}
+                disabled={!content.trim() || publishing}
+                className="h-12 rounded-xl bg-[#EA580C] px-8 hover:bg-[#C2410C] disabled:opacity-50"
+              >
+                {publishing ? t("발행 중...", "Publishing...") : t("발행하기", "Publish")}
               </Button>
             </div>
           </div>

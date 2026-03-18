@@ -19,7 +19,7 @@ interface CommentSectionProps {
 }
 
 export function CommentSection({ reportId }: CommentSectionProps) {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { t } = useLang();
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState("");
@@ -151,10 +151,11 @@ export function CommentSection({ reportId }: CommentSectionProps) {
                   </span>
                   <span className="text-xs text-[#A8A29E]">{formatDate(comment.createdAt)}</span>
                 </div>
-                {user && user.id === comment.userId && (
+                {user && (isAdmin || user.id === comment.userId) && (
                   <button
                     onClick={() => handleDelete(comment.id)}
                     className="rounded-lg p-1 text-[#A8A29E] hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20"
+                    title={isAdmin && user.id !== comment.userId ? "Admin delete" : ""}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>

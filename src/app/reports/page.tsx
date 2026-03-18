@@ -41,7 +41,12 @@ export default function ReportsPage() {
   ];
 
   const filteredReports = useMemo(() => {
-    let reports = [...mockReports];
+    // Merge mock reports with admin-published custom reports
+    let customReports: typeof mockReports = [];
+    try {
+      customReports = JSON.parse(localStorage.getItem("flint-custom-reports") || "[]");
+    } catch { /* ignore */ }
+    let reports = [...customReports, ...mockReports];
 
     if (search) {
       const q = search.toLowerCase();
