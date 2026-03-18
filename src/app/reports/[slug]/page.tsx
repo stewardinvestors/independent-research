@@ -46,23 +46,28 @@ export default function ReportDetailPage({
     if (storedBought === "true") setBought(true);
   }, [report]);
 
-  // GA4: 스크롤 90% 도달 시 report_read_complete 이벤트
+  // GA4: 스크롤 구간별 이벤트 (25%, 50%, 75%, 90%)
   useEffect(() => {
     if (!report) return;
-    let fired = false;
+    const thresholds = [25, 50, 75, 90];
+    const fired = new Set<number>();
     const handleScroll = () => {
-      if (fired) return;
       const scrollPercent =
-        (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
-      if (scrollPercent >= 0.9) {
-        fired = true;
-        gtagEvent({
-          action: "report_read_complete",
-          category: "engagement",
-          label: report.slug,
-          report_id: report.id,
-          stock_code: report.stock?.code ?? "",
-        });
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100;
+      for (const threshold of thresholds) {
+        if (scrollPercent >= threshold && !fired.has(threshold)) {
+          fired.add(threshold);
+          gtagEvent({
+            action: threshold === 90 ? "report_read_complete" : "report_scroll_depth",
+            category: "engagement",
+            label: report.slug,
+            report_id: report.id,
+            stock_code: report.stock?.code ?? "",
+            scroll_depth: threshold,
+          });
+        }
+      }
+      if (fired.size === thresholds.length) {
         window.removeEventListener("scroll", handleScroll);
       }
     };
