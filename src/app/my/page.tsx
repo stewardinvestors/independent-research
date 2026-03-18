@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Bookmark, Eye, Heart, UserCheck, FileText, Settings, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { ReportCard } from "@/components/report/ReportCard";
 import { useLang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export default function MyPage() {
   const { t } = useLang();
@@ -18,19 +19,42 @@ export default function MyPage() {
   const [authOpen, setAuthOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
+  const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
+  const [likeCount, setLikeCount] = useState(0);
+  const useSupabaseFlag = isSupabaseConfigured();
 
-  // bookmarks & recent stored per-user in localStorage
   const bookmarkKey = user ? `flint-bookmarks-${user.id}` : "";
-  const getBookmarks = (): string[] => {
-    if (!user) return [];
-    try {
-      return JSON.parse(localStorage.getItem(bookmarkKey) || "[]");
-    } catch {
-      return [];
-    }
-  };
 
-  const bookmarkedIds = getBookmarks();
+  const loadBookmarks = useCallback(async () => {
+    if (!user) return;
+    if (useSupabaseFlag) {
+      const { data } = await supabase
+        .from("bookmarks")
+        .select("report_id")
+        .eq("user_id", user.id);
+      if (data) {
+        setBookmarkedIds(data.map((b) => b.report_id));
+      }
+      // Load like count
+      const { count } = await supabase
+        .from("likes")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      setLikeCount(count ?? 0);
+    } else {
+      try {
+        const stored = JSON.parse(localStorage.getItem(bookmarkKey) || "[]");
+        setBookmarkedIds(stored);
+      } catch {
+        setBookmarkedIds([]);
+      }
+    }
+  }, [user, useSupabaseFlag, bookmarkKey]);
+
+  useEffect(() => {
+    loadBookmarks();
+  }, [loadBookmarks]);
+
   const bookmarkedReports = mockReports.filter((r) => bookmarkedIds.includes(r.id));
   const recentReports = mockReports.slice(0, 4);
 
@@ -161,7 +185,7 @@ export default function MyPage() {
             <p className="flex items-center justify-center gap-1 text-xs text-[#6B7280]">
               <Heart className="h-3 w-3" /> {t("좋아요", "Likes")}
             </p>
-            <p className="mt-1 text-lg font-bold text-[#1C1917]">0</p>
+            <p className="mt-1 text-lg font-bold text-[#1C1917]">{likeCount}</p>
           </div>
         </div>
 

@@ -83,12 +83,12 @@ export function AuthModal({ open, onClose, initialMode = "login" }: AuthModalPro
       return;
     }
 
-    setTimeout(() => {
+    setTimeout(async () => {
       let result;
       if (mode === "login") {
-        result = login(email, password);
+        result = await login(email, password);
       } else {
-        result = register(name, email, password);
+        result = await register(name, email, password);
       }
 
       if (result.ok) {
@@ -108,11 +108,11 @@ export function AuthModal({ open, onClose, initialMode = "login" }: AuthModalPro
     const socialPw = `${provider}-demo-2026`;
 
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       // Try login first, register if not exists
-      let result = login(socialEmail, socialPw);
+      let result = await login(socialEmail, socialPw);
       if (!result.ok) {
-        result = register(socialName, socialEmail, socialPw);
+        result = await register(socialName, socialEmail, socialPw);
       }
       if (result.ok) {
         reset();

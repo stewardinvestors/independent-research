@@ -26,6 +26,7 @@ import { CommentSection } from "@/components/report/CommentSection";
 import { useLang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { event as gtagEvent } from "@/lib/gtag";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 export default function ReportDetailPage({
   params,
@@ -36,6 +37,7 @@ export default function ReportDetailPage({
   const { t } = useLang();
   const { user } = useAuth();
   const report = mockReports.find((r) => r.slug === slug);
+  const useSupabase = isSupabaseConfigured();
 
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -56,18 +58,54 @@ export default function ReportDetailPage({
 
   useEffect(() => {
     if (!report) return;
-    const stored = localStorage.getItem(`flint-likes-${report.id}`);
-    const storedCount = localStorage.getItem(`flint-like-count-${report.id}`);
-    if (stored === "true") setLiked(true);
-    setLikeCount(storedCount ? parseInt(storedCount, 10) : report.likeCount);
+
+    if (useSupabase) {
+      // Load like count from Supabase
+      supabase
+        .from("likes")
+        .select("id", { count: "exact", head: true })
+        .eq("report_id", report.id)
+        .then(({ count }) => {
+          setLikeCount(count ?? report.likeCount);
+        });
+
+      // Check if user liked
+      if (user) {
+        supabase
+          .from("likes")
+          .select("id")
+          .eq("report_id", report.id)
+          .eq("user_id", user.id)
+          .maybeSingle()
+          .then(({ data }) => {
+            setLiked(!!data);
+          });
+
+        // Check if user bookmarked
+        supabase
+          .from("bookmarks")
+          .select("id")
+          .eq("report_id", report.id)
+          .eq("user_id", user.id)
+          .maybeSingle()
+          .then(({ data }) => {
+            setBookmarked(!!data);
+          });
+      }
+    } else {
+      const stored = localStorage.getItem(`flint-likes-${report.id}`);
+      const storedCount = localStorage.getItem(`flint-like-count-${report.id}`);
+      if (stored === "true") setLiked(true);
+      setLikeCount(storedCount ? parseInt(storedCount, 10) : report.likeCount);
+      if (user) {
+        const bm = getBookmarks();
+        setBookmarked(bm.includes(report.id));
+      }
+    }
+
     const storedBought = localStorage.getItem(`flint-bought-${report.id}`);
     if (storedBought === "true") setBought(true);
-    // Bookmark
-    if (user) {
-      const bm = getBookmarks();
-      setBookmarked(bm.includes(report.id));
-    }
-  }, [report, user, getBookmarks]);
+  }, [report, user, useSupabase, getBookmarks]);
 
   // GA4: 스크롤 구간별 이벤트 (25%, 50%, 75%, 90%)
   useEffect(() => {
@@ -98,27 +136,59 @@ export default function ReportDetailPage({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [report]);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!report) return;
-    if (!liked) {
-      const newCount = likeCount + 1;
-      setLiked(true);
-      setLikeCount(newCount);
-      localStorage.setItem(`flint-likes-${report.id}`, "true");
-      localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
-      gtagEvent({
-        action: "report_helpful",
-        category: "engagement",
-        label: report.slug,
-        report_id: report.id,
-        stock_code: report.stock?.code ?? "",
-      });
+
+    if (useSupabase) {
+      if (!user) return;
+      if (!liked) {
+        const { error } = await supabase.from("likes").insert({
+          user_id: user.id,
+          report_id: report.id,
+        });
+        if (!error) {
+          setLiked(true);
+          setLikeCount((c) => c + 1);
+          gtagEvent({
+            action: "report_helpful",
+            category: "engagement",
+            label: report.slug,
+            report_id: report.id,
+            stock_code: report.stock?.code ?? "",
+          });
+        }
+      } else {
+        const { error } = await supabase
+          .from("likes")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("report_id", report.id);
+        if (!error) {
+          setLiked(false);
+          setLikeCount((c) => c - 1);
+        }
+      }
     } else {
-      const newCount = likeCount - 1;
-      setLiked(false);
-      setLikeCount(newCount);
-      localStorage.setItem(`flint-likes-${report.id}`, "false");
-      localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
+      if (!liked) {
+        const newCount = likeCount + 1;
+        setLiked(true);
+        setLikeCount(newCount);
+        localStorage.setItem(`flint-likes-${report.id}`, "true");
+        localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
+        gtagEvent({
+          action: "report_helpful",
+          category: "engagement",
+          label: report.slug,
+          report_id: report.id,
+          stock_code: report.stock?.code ?? "",
+        });
+      } else {
+        const newCount = likeCount - 1;
+        setLiked(false);
+        setLikeCount(newCount);
+        localStorage.setItem(`flint-likes-${report.id}`, "false");
+        localStorage.setItem(`flint-like-count-${report.id}`, String(newCount));
+      }
     }
   };
 
@@ -140,17 +210,35 @@ export default function ReportDetailPage({
     }
   };
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
     if (!report || !user) return;
-    const bm = getBookmarks();
-    if (bookmarked) {
-      const next = bm.filter((id) => id !== report.id);
-      localStorage.setItem(bookmarkKey, JSON.stringify(next));
-      setBookmarked(false);
+
+    if (useSupabase) {
+      if (bookmarked) {
+        const { error } = await supabase
+          .from("bookmarks")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("report_id", report.id);
+        if (!error) setBookmarked(false);
+      } else {
+        const { error } = await supabase.from("bookmarks").insert({
+          user_id: user.id,
+          report_id: report.id,
+        });
+        if (!error) setBookmarked(true);
+      }
     } else {
-      bm.push(report.id);
-      localStorage.setItem(bookmarkKey, JSON.stringify(bm));
-      setBookmarked(true);
+      const bm = getBookmarks();
+      if (bookmarked) {
+        const next = bm.filter((id) => id !== report.id);
+        localStorage.setItem(bookmarkKey, JSON.stringify(next));
+        setBookmarked(false);
+      } else {
+        bm.push(report.id);
+        localStorage.setItem(bookmarkKey, JSON.stringify(bm));
+        setBookmarked(true);
+      }
     }
   };
 
