@@ -95,16 +95,21 @@ export default function ReportDetailPage({
   };
 
   const handleBought = () => {
-    if (!report || bought) return;
-    setBought(true);
-    localStorage.setItem(`flint-bought-${report.id}`, "true");
-    gtagEvent({
-      action: "report_bought",
-      category: "conversion",
-      label: report.slug,
-      report_id: report.id,
-      stock_code: report.stock?.code ?? "",
-    });
+    if (!report) return;
+    if (!bought) {
+      setBought(true);
+      localStorage.setItem(`flint-bought-${report.id}`, "true");
+      gtagEvent({
+        action: "report_bought",
+        category: "conversion",
+        label: report.slug,
+        report_id: report.id,
+        stock_code: report.stock?.code ?? "",
+      });
+    } else {
+      setBought(false);
+      localStorage.setItem(`flint-bought-${report.id}`, "false");
+    }
   };
 
   if (!report) {
