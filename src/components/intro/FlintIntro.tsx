@@ -558,7 +558,7 @@ function Scene({
           material-transparent
           material-opacity={0}
         >
-          {"\uC791\uC740 \uBD88\uAF43\uC774 \uC2DC\uC7A5\uC744 \uBC1D\uD789\uB2C8\uB2E4"}
+          {"작은 불꽃이 시장을 밝힙니다"}
         </Text>
       </group>
     </>
