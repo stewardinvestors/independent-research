@@ -1,17 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Eye, Calendar, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Eye, Calendar, TrendingUp, Minus, TrendingDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Report } from "@/types";
 import { opinionLabels, formatNumber } from "@/data/mock";
 import { useLang } from "@/contexts/LanguageContext";
 
 const opinionLabelsEn: Record<string, string> = {
-  BUY: "Buy",
-  HOLD: "Hold",
-  SELL: "Sell",
-  NONE: "No Opinion",
+  BULL: "Bull Case",
+  BASE: "Base Case",
+  BEAR: "Bear Case",
+  NONE: "No Scenario",
+};
+
+const scenarioIcons: Record<string, typeof TrendingUp> = {
+  BULL: TrendingUp,
+  BASE: Minus,
+  BEAR: TrendingDown,
 };
 
 interface ReportCardProps {
@@ -20,13 +26,8 @@ interface ReportCardProps {
 
 export function ReportCard({ report }: ReportCardProps) {
   const { t } = useLang();
-  const currentPrice = report.targetPrice
-    ? Math.round(report.targetPrice * 0.75)
-    : undefined;
-  const upside =
-    report.targetPrice && currentPrice
-      ? ((report.targetPrice - currentPrice) / currentPrice) * 100
-      : 0;
+
+  const Icon = report.opinion ? scenarioIcons[report.opinion] ?? Minus : Minus;
 
   return (
     <Link href={`/reports/${report.slug}`}>
@@ -68,36 +69,32 @@ export function ReportCard({ report }: ReportCardProps) {
           {report.title}
         </p>
 
-        {/* Target price */}
-        {report.opinion && report.targetPrice && (
+        {/* Scenario indicator */}
+        {report.opinion && report.opinion !== "NONE" && (
           <div className="mt-4 flex items-center gap-2">
+            <Icon
+              className={`h-4 w-4 ${
+                report.opinion === "BULL"
+                  ? "text-[#EA580C]"
+                  : report.opinion === "BEAR"
+                  ? "text-[#C94040]"
+                  : "text-[#6B7280]"
+              }`}
+            />
             <span
               className={`text-xs font-semibold ${
-                report.opinion === "BUY"
+                report.opinion === "BULL"
                   ? "text-[#EA580C]"
-                  : report.opinion === "SELL"
+                  : report.opinion === "BEAR"
                   ? "text-[#C94040]"
                   : "text-[#6B7280]"
               }`}
             >
               {t(opinionLabels[report.opinion], opinionLabelsEn[report.opinion])}
             </span>
-            <span className="text-sm font-bold text-[#1A1A1A]">
-              {formatNumber(report.targetPrice)}{t("원", " KRW")}
+            <span className="text-xs text-[#78716C]">
+              {t("중심 분석", "focused")}
             </span>
-            {upside > 0 ? (
-              <span className="flex items-center gap-0.5 text-xs font-medium text-[#EA580C]">
-                <TrendingUp className="h-3 w-3" />+{upside.toFixed(0)}%
-              </span>
-            ) : upside < 0 ? (
-              <span className="flex items-center gap-0.5 text-xs font-medium text-[#C94040]">
-                <TrendingDown className="h-3 w-3" />{upside.toFixed(0)}%
-              </span>
-            ) : (
-              <span className="flex items-center gap-0.5 text-xs text-[#6B7280]">
-                <Minus className="h-3 w-3" />0%
-              </span>
-            )}
           </div>
         )}
 

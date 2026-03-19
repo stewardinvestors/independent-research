@@ -2,7 +2,13 @@ export type Role = "READER" | "ANALYST" | "ADMIN";
 export type Market = "KOSPI" | "KOSDAQ" | "KONEX";
 export type ReportType = "COMPANY" | "INDUSTRY" | "EARNINGS" | "IPO";
 export type ReportStatus = "DRAFT" | "REVIEW" | "PUBLISHED";
-export type Opinion = "BUY" | "HOLD" | "SELL" | "NONE";
+export type Opinion = "BULL" | "BASE" | "BEAR" | "NONE";
+
+export interface ScenarioItem {
+  type: "BULL" | "BASE" | "BEAR";
+  label: string;
+  description: string;
+}
 
 export interface User {
   id: string;
@@ -36,6 +42,7 @@ export interface Report {
   thumbnailUrl?: string;
   opinion?: Opinion;
   targetPrice?: number;
+  scenarios?: ScenarioItem[];
   keyPoints: string[];
   tags: string[];
   viewCount: number;

@@ -4,7 +4,7 @@ import { use } from "react";
 import Link from "next/link";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { mockStocks, mockReports, formatMarketCap, opinionLabels } from "@/data/mock";
+import { mockStocks, mockReports, formatMarketCap } from "@/data/mock";
 import { ReportCard } from "@/components/report/ReportCard";
 import { useLang } from "@/contexts/LanguageContext";
 
@@ -34,10 +34,10 @@ export default function StockPage({
     );
   }
 
-  const buyCount = stockReports.filter((r) => r.opinion === "BUY").length;
-  const holdCount = stockReports.filter((r) => r.opinion === "HOLD").length;
-  const sellCount = stockReports.filter((r) => r.opinion === "SELL").length;
-  const total = buyCount + holdCount + sellCount;
+  const bullCount = stockReports.filter((r) => r.opinion === "BULL").length;
+  const baseCount = stockReports.filter((r) => r.opinion === "BASE").length;
+  const bearCount = stockReports.filter((r) => r.opinion === "BEAR").length;
+  const total = bullCount + baseCount + bearCount;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -85,35 +85,35 @@ export default function StockPage({
           </div>
         </div>
 
-        {/* Opinion consensus */}
+        {/* Scenario distribution */}
         {total > 0 && (
           <div className="mt-6">
             <p className="mb-3 text-sm font-semibold text-[#1A1A1A]">
-              {t("투자의견 컨센서스", "Opinion Consensus")}
+              {t("시나리오 분포", "Scenario Distribution")}
             </p>
             <div className="flex h-6 overflow-hidden rounded-full">
-              {buyCount > 0 && (
+              {bullCount > 0 && (
                 <div
                   className="flex items-center justify-center bg-[#EA580C] text-xs font-medium text-white"
-                  style={{ width: `${(buyCount / total) * 100}%` }}
+                  style={{ width: `${(bullCount / total) * 100}%` }}
                 >
-                  {t("매수", "Buy")} {buyCount}
+                  {t("긍정", "Bull")} {bullCount}
                 </div>
               )}
-              {holdCount > 0 && (
+              {baseCount > 0 && (
                 <div
-                  className="flex items-center justify-center bg-[#F59E0B] text-xs font-medium text-white"
-                  style={{ width: `${(holdCount / total) * 100}%` }}
+                  className="flex items-center justify-center bg-[#6B7280] text-xs font-medium text-white"
+                  style={{ width: `${(baseCount / total) * 100}%` }}
                 >
-                  {t("중립", "Hold")} {holdCount}
+                  {t("기본", "Base")} {baseCount}
                 </div>
               )}
-              {sellCount > 0 && (
+              {bearCount > 0 && (
                 <div
                   className="flex items-center justify-center bg-[#C94040] text-xs font-medium text-white"
-                  style={{ width: `${(sellCount / total) * 100}%` }}
+                  style={{ width: `${(bearCount / total) * 100}%` }}
                 >
-                  {t("매도", "Sell")} {sellCount}
+                  {t("부정", "Bear")} {bearCount}
                 </div>
               )}
             </div>

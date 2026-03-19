@@ -92,6 +92,12 @@ export function AuthModal({ open, onClose, initialMode = "login" }: AuthModalPro
       }
 
       if (result.ok) {
+        if (result.error) {
+          // 가입 성공했지만 이메일 인증 필요 등 안내 메시지
+          setError(result.error);
+          setLoading(false);
+          return;
+        }
         reset();
         onClose();
       } else {

@@ -34,11 +34,11 @@ export default function WritePage() {
     { label: t("IPO 분석", "IPO Analysis"), value: "IPO" },
   ];
 
-  const opinions: { label: string; value: Opinion; color: string }[] = [
-    { label: t("매수", "Buy"), value: "BUY", color: "bg-[#EA580C] text-white" },
-    { label: t("중립", "Hold"), value: "HOLD", color: "bg-[#F59E0B] text-white" },
-    { label: t("매도", "Sell"), value: "SELL", color: "bg-[#C94040] text-white" },
-    { label: t("의견 없음", "No Opinion"), value: "NONE", color: "bg-[#6B7280] text-white" },
+  const scenarioOptions: { label: string; value: Opinion; color: string }[] = [
+    { label: t("긍정 시나리오", "Bull Case"), value: "BULL", color: "bg-[#EA580C] text-white" },
+    { label: t("기본 시나리오", "Base Case"), value: "BASE", color: "bg-[#6B7280] text-white" },
+    { label: t("부정 시나리오", "Bear Case"), value: "BEAR", color: "bg-[#C94040] text-white" },
+    { label: t("시나리오 미제시", "No Scenario"), value: "NONE", color: "bg-[#9CA3AF] text-white" },
   ];
 
   const [step, setStep] = useState(1);
@@ -46,8 +46,10 @@ export default function WritePage() {
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [title, setTitle] = useState("");
   const [type, setType] = useState<ReportType>("COMPANY");
-  const [opinion, setOpinion] = useState<Opinion>("BUY");
-  const [targetPrice, setTargetPrice] = useState("");
+  const [focusScenario, setFocusScenario] = useState<Opinion>("BASE");
+  const [bullDesc, setBullDesc] = useState("");
+  const [baseDesc, setBaseDesc] = useState("");
+  const [bearDesc, setBearDesc] = useState("");
   const [keyPoints, setKeyPoints] = useState<string[]>([""]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -94,14 +96,19 @@ export default function WritePage() {
       .replace(/\s+/g, "-")
       .slice(0, 60) + "-" + Date.now().toString(36);
 
+    const scenarios = [];
+    if (bullDesc.trim()) scenarios.push({ type: "BULL" as const, label: "긍정 시나리오", description: bullDesc.trim() });
+    if (baseDesc.trim()) scenarios.push({ type: "BASE" as const, label: "기본 시나리오", description: baseDesc.trim() });
+    if (bearDesc.trim()) scenarios.push({ type: "BEAR" as const, label: "부정 시나리오", description: bearDesc.trim() });
+
     const newReport = {
       id: `custom-${crypto.randomUUID()}`,
       title,
       slug,
       type,
       status: "PUBLISHED",
-      opinion,
-      targetPrice: targetPrice ? parseInt(targetPrice, 10) : undefined,
+      opinion: focusScenario,
+      scenarios,
       keyPoints: keyPoints.filter((p) => p.trim()),
       tags,
       viewCount: 0,
@@ -124,7 +131,6 @@ export default function WritePage() {
       updatedAt: new Date().toISOString().slice(0, 10),
     };
 
-    // Save to localStorage
     try {
       const existing = JSON.parse(localStorage.getItem(REPORTS_KEY) || "[]");
       existing.unshift(newReport);
@@ -139,7 +145,6 @@ export default function WritePage() {
     }, 800);
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -148,7 +153,6 @@ export default function WritePage() {
     );
   }
 
-  // Not admin → access denied
   if (!user || !isAdmin) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
@@ -175,7 +179,6 @@ export default function WritePage() {
     );
   }
 
-  // Published success
   if (published) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-4 py-20 text-center">
@@ -204,7 +207,9 @@ export default function WritePage() {
               setContent("");
               setKeyPoints([""]);
               setTags([]);
-              setTargetPrice("");
+              setBullDesc("");
+              setBaseDesc("");
+              setBearDesc("");
               setStockSearch("");
             }}
             variant="outline"
@@ -252,7 +257,7 @@ export default function WritePage() {
         ))}
         <span className="ml-3 text-sm text-[#6B7280]">
           {step === 1 && t("종목 선택", "Select Stock")}
-          {step === 2 && t("메타데이터 입력", "Enter Metadata")}
+          {step === 2 && t("시나리오 설정", "Set Scenarios")}
           {step === 3 && t("본문 작성", "Write Content")}
         </span>
       </div>
@@ -333,7 +338,7 @@ export default function WritePage() {
         </div>
       )}
 
-      {/* Step 2: Metadata */}
+      {/* Step 2: Scenarios & Metadata */}
       {step === 2 && (
         <div className="mt-8 space-y-6">
           <div>
@@ -371,15 +376,15 @@ export default function WritePage() {
 
           <div>
             <label className="mb-2 block text-sm font-medium text-[#1A1A1A]">
-              {t("투자의견", "Investment Opinion")}
+              {t("주요 시나리오 (가장 가능성 높은 시나리오)", "Focus Scenario (most likely)")}
             </label>
             <div className="flex flex-wrap gap-2">
-              {opinions.map((o) => (
+              {scenarioOptions.map((o) => (
                 <button
                   key={o.value}
-                  onClick={() => setOpinion(o.value)}
+                  onClick={() => setFocusScenario(o.value)}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    opinion === o.value
+                    focusScenario === o.value
                       ? o.color
                       : "bg-[#FAFAF9] text-[#6B7280] hover:bg-[#E5E7EB]"
                   }`}
@@ -390,17 +395,44 @@ export default function WritePage() {
             </div>
           </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium text-[#1A1A1A]">
-              {t("목표가", "Target Price")} ({t("원", "KRW")})
+          {/* Scenario descriptions */}
+          <div className="space-y-3">
+            <label className="block text-sm font-medium text-[#1A1A1A]">
+              {t("시나리오 설명", "Scenario Descriptions")}
             </label>
-            <Input
-              type="number"
-              placeholder={t("목표가를 입력하세요", "Enter target price")}
-              value={targetPrice}
-              onChange={(e) => setTargetPrice(e.target.value)}
-              className="h-12 rounded-xl"
-            />
+            <div>
+              <p className="mb-1 text-xs font-medium text-[#EA580C]">
+                {t("긍정 시나리오 (Bull Case)", "Bull Case")}
+              </p>
+              <Input
+                placeholder={t("긍정 시나리오 설명", "Describe the bull case scenario")}
+                value={bullDesc}
+                onChange={(e) => setBullDesc(e.target.value)}
+                className="h-10 rounded-xl"
+              />
+            </div>
+            <div>
+              <p className="mb-1 text-xs font-medium text-[#6B7280]">
+                {t("기본 시나리오 (Base Case)", "Base Case")}
+              </p>
+              <Input
+                placeholder={t("기본 시나리오 설명", "Describe the base case scenario")}
+                value={baseDesc}
+                onChange={(e) => setBaseDesc(e.target.value)}
+                className="h-10 rounded-xl"
+              />
+            </div>
+            <div>
+              <p className="mb-1 text-xs font-medium text-[#C94040]">
+                {t("부정 시나리오 (Bear Case)", "Bear Case")}
+              </p>
+              <Input
+                placeholder={t("부정 시나리오 설명", "Describe the bear case scenario")}
+                value={bearDesc}
+                onChange={(e) => setBearDesc(e.target.value)}
+                className="h-10 rounded-xl"
+              />
+            </div>
           </div>
 
           <div>
@@ -514,7 +546,6 @@ export default function WritePage() {
             />
           </div>
 
-          {/* PDF upload */}
           <div>
             <label className="mb-2 block text-sm font-medium text-[#1A1A1A]">
               {t("또는 PDF 업로드", "Or Upload PDF")}
