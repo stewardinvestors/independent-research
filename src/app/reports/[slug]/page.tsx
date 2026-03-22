@@ -28,6 +28,12 @@ import { useLang } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { event as gtagEvent } from "@/lib/gtag";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import dynamic from "next/dynamic";
+
+const AprogenAnalysis = dynamic(
+  () => import("@/components/report/AprogenAnalysis"),
+  { ssr: false }
+);
 
 const opinionLabelsEn: Record<string, string> = {
   BULL: "Bull Case",
@@ -459,6 +465,9 @@ export default function ReportDetailPage({
       )}
 
       {/* Report body */}
+      {slug === "aprogen-biologics-interactive" ? (
+        <AprogenAnalysis />
+      ) : (
       <article className="prose prose-lg mx-auto max-w-none">
         <h2 className="text-xl font-bold text-[#1A1A1A]">
           {t("1. 기업 개요", "1. Company Overview")}
@@ -571,6 +580,7 @@ export default function ReportDetailPage({
           )}
         </p>
       </article>
+      )}
 
       {/* Action buttons */}
       <div className="mt-10 flex flex-wrap justify-center gap-3">

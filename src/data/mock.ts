@@ -48,6 +48,7 @@ export const mockStocks: Stock[] = [
   { id: "s6", code: "210540", name: "디와이파워", market: "KOSDAQ", sector: "건설기계", marketCap: 30000000000, isActive: true },
   { id: "s7", code: "014910", name: "성문전자", market: "KOSPI", sector: "전자부품", marketCap: 40000000000, isActive: true },
   { id: "s8", code: "049430", name: "코메론", market: "KOSPI", sector: "측정공구", marketCap: 22000000000, isActive: true },
+  { id: "s9", code: "003060", name: "에이프로젠바이오로직스", market: "KOSPI", sector: "바이오", marketCap: 66700000000, isActive: true },
 ];
 
 export const mockReports: Report[] = [
@@ -224,6 +225,36 @@ export const mockReports: Report[] = [
     publishedAt: "2026-03-01",
     createdAt: "2026-02-28",
     updatedAt: "2026-03-01",
+  },
+  {
+    id: "r7",
+    title: "초대형 바이오 공장이 있다. 그런데 아직 안 돌아간다.",
+    slug: "aprogen-biologics-interactive",
+    type: "COMPANY",
+    status: "PUBLISHED",
+    opinion: "BASE",
+    scenarios: [
+      { type: "BULL", label: "긍정 시나리오", description: "AP063 허가신청 접수 + 외부 CDMO 첫 수주 + EMA 간소화 경로 확정 → 가동률 상승 → 적자 축소" },
+      { type: "BASE", label: "기본 시나리오", description: "AP063 허가 지연(2027~) + 바이오 매출 현 수준 + 추가 자본조달 1~2회 → 적자·감자 반복" },
+      { type: "BEAR", label: "부정 시나리오", description: "AP063 허가 실패 + 추가 대규모 감자 + 제약부문 급감 → 자본잠식 우려" },
+    ],
+    keyPoints: [
+      "오송 바이오 공장 4suite 8,000L — 국내 3위 규모 설비 보유",
+      "매출원가율 111% — 팔수록 적자, 공장 가동률이 핵심 변수",
+      "AP063(허셉틴 바이오시밀러) 3상 생략 허가 전략 — 최대 이벤트",
+      "PBR 0.22배 극단적 할인 — 감자·유증 반복에 따른 시장 불신",
+    ],
+    tags: ["바이오", "CDMO", "바이오시밀러", "감자"],
+    viewCount: 1842,
+    likeCount: 156,
+    readTime: 20,
+    authorId: "1",
+    author: mockAnalysts[0],
+    stockId: "s9",
+    stock: mockStocks[8],
+    publishedAt: "2026-03-22",
+    createdAt: "2026-03-21",
+    updatedAt: "2026-03-22",
   },
 ];
 
